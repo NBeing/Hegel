@@ -1,7 +1,0 @@
- [
-        {"id" : 1 , "name": "You" , "text" :"Textual text"},
-        {"id" : 2 , "name": "Me" , "text": "Textual text"},
-        {"id" : 3 , "name": "Everyone" , "text": "Textual text"},
-        {"id" : 4 , "name": "No One" , "text": "Textual text"}
-
-    ]
