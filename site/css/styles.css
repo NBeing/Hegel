@@ -1,0 +1,28 @@
+h1#section{
+    text-align: center;
+    font-size: 3em;
+}
+h2{
+    text-align: center;
+}
+
+span#section {
+    font-size: 3em;
+}
+td{width:33%;
+   vertical-align: top;
+   border-top: 5px solid black;
+   border-bottom: 5px solid black;
+   padding: 2em;
+  }
+
+td > p {margin: 0px;}
+
+tr {
+    background-color: white;
+    font-size: 1.25em;
+    font-family: Georgia, sans-serif;
+    color: black;
+    line-height: 1.5em;
+    margin-bottom: 30px;
+}
