@@ -5,7 +5,6 @@ var instance = new Gutenberg({});
 var cheerio = require('cheerio');
 var request = require('request');
 var content;
-var natural = require('natural');
 app.use(express.static('site'));
 
 app.get('/english' , function(req, res){
@@ -28,6 +27,7 @@ app.get('/english' , function(req, res){
 
                 var arr = make_object();
                 res.send(arr);
+
                 function make_object(){
                     var english_array = [];
 
