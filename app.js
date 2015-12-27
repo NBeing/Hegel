@@ -4,8 +4,14 @@ var Gutenberg = require('gutenberg');
 var instance = new Gutenberg({});
 var cheerio = require('cheerio');
 var request = require('request');
+var natural = require('natural');
 var content;
 app.use(express.static('site'));
+
+
+app.get ('/what'), function (req, res){
+    res.send("Pee");
+}
 
 app.get('/english' , function(req, res){
     function parse(url) {
@@ -17,21 +23,24 @@ app.get('/english' , function(req, res){
                 $ = cheerio.load(body);
 
                 remove_empty_p();
+
+                var p  = $('body').find('p');
+                var arr = make_object(p);
+                res.send(arr);
+
                 function remove_empty_p(){
                     $('p').each(function() {
                         var $this = $(this);
                         if($this.html().replace(/\s|&nbsp;/g, '').length == 0)
                             $this.remove();
+                        console.log("fired");
                     });
                 }
 
-                var arr = make_object();
-                res.send(arr);
 
-                function make_object(){
+                function make_object(p){
                     var english_array = [];
 
-                    var p  = $('body').find('p');
 
                     p.each(function(){
 
@@ -118,6 +127,7 @@ app.get('/findlay' , function(req, res){
 
 
 app.get('/german' , function(req, res){
+
     function parse(url) {
         var content;
 
