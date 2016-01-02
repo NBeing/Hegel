@@ -18,8 +18,7 @@
     "tar-stream": "~1.3.0",
     "temp": "~0.8.3",
     "text-parse": "~3.0.0",
-    "xml2js": "~0.4.15",
-    "WNdb": "*"
+    "xml2js": "~0.4.15"
   },
   "devDependencies": {},
   "scripts": {
