@@ -2,9 +2,11 @@
 <h1 id = "section"> {{searchText}} </h1>
  <input type= "text" ng-model="searchText">
   <br>
-<br>
+  <br>
+
+
   <table>
-    <tr ng-repeat="each in master | filter: searchText ">
+    <tr ng-repeat="each in master | filter: searchText "> {{each}}
       <td> <p ng-repeat="p in each.english.paragraph"> {{p}} </p></td>
                   <td>  {{each.findlay.text}}</td>
              <td>{{each.german.text}} </td>

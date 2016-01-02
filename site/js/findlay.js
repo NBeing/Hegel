@@ -55,6 +55,17 @@ app.controller('FindlayController' , function ($scope , findlayFactory, englishF
     init();
 })
 
+app.controller('NaturalController' , function ($scope , naturalFactory, englishFactory ){
+    function init(){
+         naturalFactory.getNatural().success(function(data){ 
+                $scope.words =data;
+
+        })
+    }
+
+
+    init();
+});
 app.factory('findlayFactory' , function ($http){
     var factory = {};
     factory.getFindlays = function(){
@@ -75,6 +86,15 @@ app.factory('germanFactory' , function ($http){
     var factory = {};
     factory.getGerman = function(){
         return $http.get('http://localhost:3000/german')
+    }
+    return factory;
+})
+
+
+app.factory('naturalFactory' , function ($http){
+    var factory = {};
+    factory.getNatural = function(){
+        return $http.get('http://localhost:3000/natural')
     }
     return factory;
 })
