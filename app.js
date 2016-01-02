@@ -56,9 +56,9 @@ app.get('/natural', function(req, res){
         res.send(entire);
     }
 
-   //var items = tokenizer.tokenize("THE knowledge, which is at the start or immediately our object, can be nothing else than just that which is immediate knowledge, knowledge of the immediate, of what is. We have, in dealing with it, to proceed, too, in an immediate way, to accept what is given, not altering anything in it as it is presented before us, and keeping mere apprehension (Auffassen) free from conceptual comprehension (Begreifen).");
+   var items = tokenizer.tokenize("THE knowledge, which is at the start or immediately our object, can be nothing else than just that which is immediate knowledge, knowledge of the immediate, of what is. We have, in dealing with it, to proceed, too, in an immediate way, to accept what is given, not altering anything in it as it is presented before us, and keeping mere apprehension (Auffassen) free from conceptual comprehension (Begreifen).");
 
- var items = tokenizer.tokenize("Master Slave Dialectic");
+// var items = tokenizer.tokenize("Master Slave Dialectic");
 
     async.map(items, lookup,function(err,resp){
         donefunc(items, resp);
