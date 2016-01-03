@@ -1,6 +1,5 @@
 var express = require('express');
 var app = express();
-var Gutenberg = require('gutenberg');
 var instance = new Gutenberg({});
 var cheerio = require('cheerio');
 var request = require('request');
