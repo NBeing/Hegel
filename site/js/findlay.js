@@ -59,7 +59,6 @@ app.controller('NaturalRefactorController' , function ($scope , naturalreFactory
     function init(){
          naturalreFactory.getNatural().success(function(data){ 
                 $scope.words = data;
-
         })
     }
 

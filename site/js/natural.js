@@ -1,4 +1,8 @@
 var exports = module.exports = {}
+var Promise = require('promise');
+var natural = require('natural');
+var wordnet = new natural.WordNet();
+var tokenizer = new natural.WordTokenizer();
 
 exports.getToken =  function(word ){
     return new Promise(function(fulfill, reject){
