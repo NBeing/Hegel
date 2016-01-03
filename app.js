@@ -5,7 +5,7 @@ var instance = new Gutenberg({});
 var cheerio = require('cheerio');
 var request = require('request');
 var Promise = require('promise');
-var Promise = require('promise');
+var async = require('async');
 var natural = require('natural');
 var wordnet = new natural.WordNet();
 var tokenizer = new natural.WordTokenizer();
@@ -15,37 +15,16 @@ var natty = require('./site/js/natural.js')
 
 app.use(express.static('site'));
 
-app.get('/naturalrefactor' , function(req, res){
-    var hello  = natty.toke;
-    var objectify  = natty.objectify;
-    var process = natty.process;
-    var word = 'penultimate';
-    var words = ['penultimate', 'tooth', 'trolley'];
+app.get('/natural' , function(req, res){
+
     var words = tokenizer.tokenize("THE knowledge, which is at the start or immediately our object, can be nothing else than just that which is immediate knowledge, knowledge of the immediate, of what is. We have, in dealing with it, to proceed, too, in an immediate way, to accept what is given, not altering anything in it as it is presented before us, and keeping mere apprehension (Auffassen) free from conceptual comprehension (Begreifen).");
 
-    var look = function(word){
-        return new Promise(function(fulfill, reject){
-            try{
-                var x = natty.getToken(word);
-                fulfill(x);
-            } catch (ex){
-                reject(ex);
-            }
-        })
-    }
-    function lookmultiple(words){
-        var promises = [];
-        words.forEach(function(word){
-            promises.push(look(word));
-        })
-        Promise.all(promises).then(function(data){
-            res.send(data);
-        })
-    }
-    lookmultiple(words);
+  natty.lookupmultiple(words).then(function(data){
+        res.send(data);
+    })
 });
 
-app.get('/natural', function(req, res){
+app.get('/naturall', function(req, res){
     var tokenizer = new natural.WordTokenizer();
     var items = tokenizer.tokenize("THE knowledge, which is at the start or immediately our object, can be nothing else than just that which is immediate knowledge, knowledge of the immediate, of what is. We have, in dealing with it, to proceed, too, in an immediate way, to accept what is given, not altering anything in it as it is presented before us, and keeping mere apprehension (Auffassen) free from conceptual comprehension (Begreifen).");
 

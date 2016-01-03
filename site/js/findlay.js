@@ -55,16 +55,6 @@ app.controller('FindlayController' , function ($scope , findlayFactory, englishF
     init();
 })
 
-app.controller('NaturalRefactorController' , function ($scope , naturalreFactory, englishFactory ){
-    function init(){
-         naturalreFactory.getNatural().success(function(data){ 
-                $scope.words = data;
-        })
-    }
-
-
-    init();
-});
 
 app.controller('NaturalController' , function ($scope , naturalFactory, englishFactory ){
     function init(){
@@ -103,18 +93,11 @@ app.factory('germanFactory' , function ($http){
 })
 
 
+
 app.factory('naturalFactory' , function ($http){
     var factory = {};
     factory.getNatural = function(){
         return $http.get('http://localhost:3000/natural')
-    }
-    return factory;
-})
-
-app.factory('naturalreFactory' , function ($http){
-    var factory = {};
-    factory.getNatural = function(){
-        return $http.get('http://localhost:3000/naturalrefactor')
     }
     return factory;
 })

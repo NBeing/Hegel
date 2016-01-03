@@ -1,0 +1,19 @@
+<h2> Section</h2>
+<h1 id = "section"> {{searchText}} </h1>
+ <input type= "text" ng-model="searchText">
+  <br>
+  <br>
+
+  <div ng-model="words">
+    <a ng-repeat="word in words.para track by $index" href="/natural/#{{word}}"> {{word}}</a>
+    </div>
+
+  <div ng-repeat="single in words.entry | filter: searchText">
+    <h1 id = "{{single[0].word}}">{{single[0].word}} </h1>
+    <ul ng-repeat="entry in single track by $index "> Sense {{$index}}
+      <li>Glossary: {{entry.gloss}}</li>
+      <li>Definition:  {{entry.def}}</li>
+      <li>Part of Speech:  {{entry.pos}} </li>
+      </ul>
+      </div>
+  </div>

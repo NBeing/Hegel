@@ -4,7 +4,7 @@ var natural = require('natural');
 var wordnet = new natural.WordNet();
 var tokenizer = new natural.WordTokenizer();
 
-exports.getToken =  function(word ){
+var getToken =  function(word ){
     return new Promise(function(fulfill, reject){
         wordnet.lookup(word, function(result){
             try {
@@ -17,22 +17,27 @@ exports.getToken =  function(word ){
         }, reject);
     });
 }
+exports.getToken = getToken;
 
-exports.objectify  = function(wordlist){
-    return new Promise (function (fulfill, reject){
+var look = function(word){
+    return new Promise(function(fulfill, reject){
         try{
-            var info = wordlist.info;
-            info.forEach(function(res){
-                var obj = {};
-                obj.lemma = res.lemma;
-                obj.gloss = res.gloss;
-                obj.def = res.def;
-                wordlist.info.push(obj);
-            });
-            console.log(wordlist.info);
-            fulfill(wordlist.info);
+            var lookup = getToken(word);
+            fulfill(lookup);
         } catch (ex){
-            reject(ex)
+            reject(ex);
         }
     })
 }
+exports.look = look;
+
+var lookupmultiple =function(words){
+      var promises = [];
+      words.forEach(function(word){
+
+      promises.push(look(word));
+      })
+    return Promise.all(promises);
+}
+
+exports.lookupmultiple = lookupmultiple;
