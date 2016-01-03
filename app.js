@@ -22,59 +22,6 @@ app.get('/natural' , function(req, res){
     })
 });
 
-app.get('/naturall', function(req, res){
-    var tokenizer = new natural.WordTokenizer();
-    var items = tokenizer.tokenize("THE knowledge, which is at the start or immediately our object, can be nothing else than just that which is immediate knowledge, knowledge of the immediate, of what is. We have, in dealing with it, to proceed, too, in an immediate way, to accept what is given, not altering anything in it as it is presented before us, and keeping mere apprehension (Auffassen) free from conceptual comprehension (Begreifen).");
-
-    // var items = tokenizer.tokenize("Master Slave Dialectic");
-
-    var lookup = function(word, doneCallBack){
-        wordnet.lookup(word, function(results){
-            var resp = [];
-            results.forEach(function(result){
-                var the_word = word;
-                var wort = {"the_word": the_word , def:"", synonyms: "" , pos: "", gloss:""};
-                wort.synonyms = result.synonyms;
-                wort.def = result.def;
-                wort.pos = result.pos;
-                wort.gloss = result.gloss;
-                resp.push(wort)
-            })
-            return doneCallBack(null, resp);
-        })
-    }
-
-    function donefunc(items, resp){
-        var entire = {para:"" , entry:""};
-        entire.para = items;
-        entire.entry = [];
-        for(var i = 0 ; i < resp.length; i++){
-            console.log("Response number: " + i );
-            var entry = [];
-            for(var k = 0 ; k < resp[i].length; k++){
-                var cur = resp[i][k];
-                var obj =  {word:"" , def:"", pos: "", gloss: ""};
-                var the_word = cur.the_word;
-                var pos = cur.pos;
-                var gloss = cur.gloss;
-                var def = cur.def;
-                obj.pos = pos;
-                obj.gloss = gloss;
-                obj.word = the_word
-                obj.def = def;
-                entry.push(obj);
-            }
-            entire.entry.push(entry);
-        }
-        res.send(entire);
-    }
-
-    async.map(items, lookup,function(err,resp){
-        donefunc(items, resp);
-    });
-
-}) // End Natural
-
 app.get('/english' , function(req, res){
     function parse(url) {
         var content;
