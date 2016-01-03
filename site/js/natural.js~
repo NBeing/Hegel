@@ -1,0 +1,5 @@
+var exports = module.exports = {}
+var natural = require('natural');
+var wordnet = new natural.WordNet();
+
+exports.hellotext = "Gelllooooo";

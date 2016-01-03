@@ -58,7 +58,7 @@ app.controller('FindlayController' , function ($scope , findlayFactory, englishF
 app.controller('NaturalRefactorController' , function ($scope , naturalreFactory, englishFactory ){
     function init(){
          naturalreFactory.getNatural().success(function(data){ 
-                $scope.words = data;
+                $scope.words =data;
 
         })
     }

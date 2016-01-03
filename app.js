@@ -4,17 +4,53 @@ var Gutenberg = require('gutenberg');
 var instance = new Gutenberg({});
 var cheerio = require('cheerio');
 var request = require('request');
+var Promise = require('promise');
+var Promise = require('promise');
 var natural = require('natural');
 var wordnet = new natural.WordNet();
-var async = require("async");
+var tokenizer = new natural.WordTokenizer();
 
-var content;
+var fs  = require('fs');
+var natty = require('./site/js/natural.js')
+
 app.use(express.static('site'));
 
+app.get('/naturalrefactor' , function(req, res){
+    var hello  = natty.toke;
+    var objectify  = natty.objectify;
+    var process = natty.process;
+    var word = 'penultimate';
+    var words = ['penultimate', 'tooth', 'trolley'];
+    var words = tokenizer.tokenize("THE knowledge, which is at the start or immediately our object, can be nothing else than just that which is immediate knowledge, knowledge of the immediate, of what is. We have, in dealing with it, to proceed, too, in an immediate way, to accept what is given, not altering anything in it as it is presented before us, and keeping mere apprehension (Auffassen) free from conceptual comprehension (Begreifen).");
+
+    var look = function(word){
+        return new Promise(function(fulfill, reject){
+            try{
+                var x = natty.getToken(word);
+                fulfill(x);
+            } catch (ex){
+                reject(ex);
+            }
+        })
+    }
+    function lookmultiple(words){
+        var promises = [];
+        words.forEach(function(word){
+            promises.push(look(word));
+        })
+        Promise.all(promises).then(function(data){
+            res.send(data);
+        })
+    }
+    lookmultiple(words);
+});
 
 app.get('/natural', function(req, res){
-    
-   var tokenizer = new natural.WordTokenizer();
+    var tokenizer = new natural.WordTokenizer();
+    var items = tokenizer.tokenize("THE knowledge, which is at the start or immediately our object, can be nothing else than just that which is immediate knowledge, knowledge of the immediate, of what is. We have, in dealing with it, to proceed, too, in an immediate way, to accept what is given, not altering anything in it as it is presented before us, and keeping mere apprehension (Auffassen) free from conceptual comprehension (Begreifen).");
+
+    // var items = tokenizer.tokenize("Master Slave Dialectic");
+
     var lookup = function(word, doneCallBack){
         wordnet.lookup(word, function(results){
             var resp = [];
@@ -56,15 +92,12 @@ app.get('/natural', function(req, res){
         res.send(entire);
     }
 
-   var items = tokenizer.tokenize("THE knowledge, which is at the start or immediately our object, can be nothing else than just that which is immediate knowledge, knowledge of the immediate, of what is. We have, in dealing with it, to proceed, too, in an immediate way, to accept what is given, not altering anything in it as it is presented before us, and keeping mere apprehension (Auffassen) free from conceptual comprehension (Begreifen).");
-
-// var items = tokenizer.tokenize("Master Slave Dialectic");
-
     async.map(items, lookup,function(err,resp){
         donefunc(items, resp);
     });
 
 }) // End Natural
+
 app.get('/english' , function(req, res){
     function parse(url) {
         var content;
