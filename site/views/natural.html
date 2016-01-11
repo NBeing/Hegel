@@ -1,10 +1,37 @@
+<input type= "text" ng-model="section">
+{{section}}
+
+<button ng-click="getit(section)">Get Section</button>
+
 <br>
+
+<input type= "text" ng-model="wordy">
+<button ng-click="wordget(wordy)">Get wordnet</button>
+
+<div ng-model="wordy">
+  <div ng-repeat="word in wordy.info track by $index">
+    <ul>{{word.lemma}}
+      <li>{{word.def}} </li>
+      <li>{{word.gloss}} </li>
+      <li>{{word.pos}} </li>
+      </ul>
+    <hr>    
+  </div>
+
+</div>
+
+<br>
+
+<div ng-model="ind">
+<span ng-repeat="item in ind track by $index">{{item}} </span>
+</div>
+<hr>
 <div ng-model = "words">
+  {{words}}
     <span ng-repeat="word in words track by $index">{{word.word}} </span>
   </div>
   <div ng-model="words">
     <div ng-repeat="word in words track by $index" href="/natural/#{{word}}">
-
       <h1>Word: {{word.word}}</h1>
 
       <section ng-repeat="info in word.info">
@@ -18,4 +45,3 @@
       </section>
         </div>
     </div>
-

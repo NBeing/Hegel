@@ -57,14 +57,28 @@ app.controller('FindlayController' , function ($scope , findlayFactory, englishF
 
 
 app.controller('NaturalController' , function ($scope , naturalFactory, englishFactory ){
-    function init(){
-         naturalFactory.getNatural().success(function(data){ 
-                $scope.words =data;
+    
 
+    $scope.getit = function(num){
+        $scope.getInd(num).success(function(data){
+            $scope.ind = data[0];
         })
     }
 
+    $scope.wordget = function(word){
+        $scope.getIndWord(word).success(function(data){
+            $scope.wordy = data;
+        })
+    }
+    function init(){
+        $scope.section = 91;
+        $scope.getInd = naturalFactory.getInd;
+        $scope.getIndWord = naturalFactory.getIndWord;
+        $scope.wordy = "Ball";
+        $scope.getit($scope.section);
+        $scope.wordget($scope.wordy);
 
+    }
     init();
 });
 
@@ -93,11 +107,16 @@ app.factory('germanFactory' , function ($http){
 })
 
 
-
 app.factory('naturalFactory' , function ($http){
     var factory = {};
-    factory.getNatural = function(){
-        return $http.get('http://localhost:3000/natural')
+    factory.getInd = function (ind){
+
+        return $http.get('http://localhost:3000/api/hegels/'+ ind.toString());
     }
+    factory.getIndWord = function (word){
+        return $http.get('http://localhost:3000/api/hegels/word/'+ word);
+    }
+
+
     return factory;
 })

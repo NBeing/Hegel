@@ -5,88 +5,110 @@ var request = require('request');
 var Promise = require('promise');
 var async = require('async');
 var natural = require('natural');
+var Gutenberg = require('gutenberg');
+var instance  = new Gutenberg();
 var wordnet = new natural.WordNet();
 var tokenizer = new natural.WordTokenizer();
-
+var bodyParser = require('body-parser');
 var fs  = require('fs');
-var natty = require('./site/js/natural.js')
+var natty = require('./site/js/natural.js');
+var mongoose = require('mongoose');
+var eng = require('./site/js/eng.js');
+var Hegel = require('./site/js/bear.js');
 
 app.use(express.static('site'));
+app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.json());
 
-app.get('/natural' , function(req, res){
+mongoose.connect('mongodb://jeff:duomaximum01@ds035683.mongolab.com:35683/hegeltest');
 
-    var words = tokenizer.tokenize("THE knowledge, which is at the start or immediately our object, can be nothing else than just that which is immediate knowledge, knowledge of the immediate, of what is. We have, in dealing with it, to proceed, too, in an immediate way, to accept what is given, not altering anything in it as it is presented before us, and keeping mere apprehension (Auffassen) free from conceptual comprehension (Begreifen).");
+var router = express.Router();
+router.use(function(req, res, next) {
+    // do logging
+    console.log('Something is happening.');
+    next(); // make sure we go to the next routes and don't stop here
+});
 
-  natty.lookupmultiple(words).then(function(data){
-        res.send(data);
+router.route('/hegels')
+    .post(function(req, res) {
+
+        eng.getit('https://www.marxists.org/reference/archive/hegel/works/ph/phaa.htm').
+            then(function(data){
+                var data = eng.get_data(data);
+
+                data.forEach(function(one){
+                    var hegel = new Hegel();
+                    hegel.id = one.id;
+                    hegel.text = one.paragraph[0];
+                    hegel.type = one.type;
+
+                    hegel.save(function(err){});
+                })
+
+            });
     })
+    .get(function(req, res) {
+        Hegel.find(function(err, hegels) {
+            if (err)
+                res.send(err);
+
+            res.json(hegels);
+        });
+    });
+
+router.route('/hegels/:id')
+
+    .get(function(req, res) {
+        var id = req.params.id;
+        console.log(id);
+        Hegel.findOne({id:id}, function(err, hegel ){
+            if(err){
+                console.log(err)
+            }
+            var words = [];
+            words[0]  = hegel.text.toString();
+            words[0] = tokenizer.tokenize(words[0]);
+
+            /*natty.lookupmultiple(words[0]).then(function(data){
+                words[1] = data;
+
+                })*/
+            res.send(words);
+            
+        })
+    });
+
+router.route('/hegels/word/:word')
+    .get( function(req , res ) {
+        var word = req.params.word;
+        natty.getToken(word).then(function(data){
+            console.log(data);
+            res.send(data);
+        })
+    })
+
+
+    app.get('/natural' , function(req, res){
+        var words;
+        request('http://localhost:3000/api/hegels', function (error, response, body) {
+            body = JSON.parse(body);
+            body.forEach(function(one){
+                words= one.text.toString();
+                words = tokenizer.tokenize(words);
+                res.send(words);
+            })
+//            natty.lookupmultiple(words).then(function(data){
+  //              res.send(data);
+    //        })
+        });
 });
 
 app.get('/english' , function(req, res){
-    function parse(url) {
-        var content;
-
-        request(url, function (error, response, body) {
-            if (!error){
-            var
-                $ = cheerio.load(body);
-
-                remove_empty_p();
-
-                var p  = $('body').find('p');
-                var arr = make_object(p);
-                res.send(arr);
-
-                function remove_empty_p(){
-                    $('p').each(function() {
-                        var $this = $(this);
-                        if($this.html().replace(/\s|&nbsp;/g, '').length == 0)
-                            $this.remove();
-                        console.log("fired");
-                    });
-                }
-
-
-                function make_object(p){
-                    var english_array = [];
-
-
-                    p.each(function(){
-
-                        var id , text , type , paragraph;
-
-                        var json =
-                            { type: "english", id : "" , text: "" , section: "", paragraph : []};
-
-                        var p  = $(this);
-                        var paragraph= [];
-                        if (p.find('span.point1').text()){
-
-
-                            var text = p.find('span.point1');
-                            var id = text.find('a').next().text();
-                            json.id = id;
-
-                            var first_text = p.find('span.point1').parent().text();
-                            text = text.find('a').next().text();
-                            paragraph.push(first_text);
-
-                            var next = p.next('p');
-                            if (next.find('span.point1').text() == ""){
-                                var next_text = next.text();
-                                paragraph.push(next_text);
-                            }
-                            json.paragraph = paragraph;
-                            english_array.push(json);
-                        }
-
-                    })
-                        return english_array;
-                }
-            }
-        })
-    }
-    parse('https://www.marxists.org/reference/archive/hegel/works/ph/phaa.htm');
+    eng.getit('https://www.marxists.org/reference/archive/hegel/works/ph/phaa.htm').
+        then(function(data){
+            var data = eng.get_data(data);
+            res.send(data);
+        });
 });
 
 app.get('/findlay' , function(req, res){
@@ -202,6 +224,7 @@ app.get('/scrape', function(req, res){
         }
     })
 })
+app.use('/api' , router);
 
 var server = app.listen(3000, function () {
     var host = server.address().address;
