@@ -21,7 +21,7 @@ app.use(express.static('site'));
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
 
-mongoose.connect('mongodb://jeff:duomaximum01@ds035683.mongolab.com:35683/hegeltest');
+mongoose.connect('mongodb://userx:userxpass@ds035683.mongolab.com:35683/hegeltest');
 
 var router = express.Router();
 router.use(function(req, res, next) {
