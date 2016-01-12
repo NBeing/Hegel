@@ -26,3 +26,53 @@ tr {
     line-height: 1.5em;
     margin-bottom: 30px;
 }
+
+.focus{
+  background-color: black;
+  color: white;
+}
+
+.blue{
+  color: blue;
+}
+
+.ind_section{
+  width: 55%;
+  float: left;
+  margin-left: 2.5%;
+}
+.ind_section > p {
+  line-height: 1.5em;
+  font-family: Helvetica;
+  font-size: 1.2em;
+}
+
+.wordies{
+  float: right;
+  width: 35%;
+  margin-right: 2.5%;
+
+}
+
+.wordies > div {
+  border: 2px solid black;
+  padding: .75em;
+    border-radius: 20px;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+.wordies >div > ul {
+  font-weight: bolder;
+} 
+.wordies >div > ul > li {
+
+  margin: 0.25em;
+  font-family: Georgia;
+  list-style-type: none;
+}
+
+.section-title{
+  font-size: 2em;
+  font-weight: bolder;
+  margin: 1em;
+}

@@ -9,4 +9,8 @@ app.config(function($routeProvider){
               {controller: 'FindlayController',
                templateUrl: '/views/hegel.html'
               })
+             .when('/ui',
+              {controller: 'FindlayController',
+               templateUrl: '/views/ui.html'
+              })
 });

@@ -5,16 +5,17 @@ var request = require('request');
 var Promise = require('promise');
 var async = require('async');
 var natural = require('natural');
-var Gutenberg = require('gutenberg');
-var instance  = new Gutenberg();
 var wordnet = new natural.WordNet();
 var tokenizer = new natural.WordTokenizer();
+var wikipedia = require("wikipedia-js");
+
 var bodyParser = require('body-parser');
 var fs  = require('fs');
 var natty = require('./site/js/natural.js');
 var mongoose = require('mongoose');
 var eng = require('./site/js/eng.js');
 var Hegel = require('./site/js/bear.js');
+
 
 app.use(express.static('site'));
 app.use(bodyParser.urlencoded({extended:true}));
@@ -81,12 +82,29 @@ router.route('/hegels/:id')
 router.route('/hegels/word/:word')
     .get( function(req , res ) {
         var word = req.params.word;
+
         natty.getToken(word).then(function(data){
             console.log(data);
             res.send(data);
         })
     })
 
+router.route('/wiki/:query')
+    .get(function(req, res){
+        var query = req.params.query;
+        // if you want to retrieve a full article set summaryOnly to false. 
+        // Full article retrieval and parsing is still beta 
+        var options = {query: query, format: "html", summaryOnly: true};
+        
+        wikipedia.searchArticle(options, function(err, htmlWikiText){
+            if(err){
+            console.log("An error occurred[query=%s, error=%s]", query, err);
+            return;
+        }
+                res.send(htmlWikiText);
+
+    })
+    });
 
     app.get('/natural' , function(req, res){
         var words;

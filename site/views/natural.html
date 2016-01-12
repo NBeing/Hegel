@@ -1,32 +1,40 @@
+<span class = "section-title">{{section}}</span>
 <input type= "text" ng-model="section">
-{{section}}
+
 
 <button ng-click="getit(section)">Get Section</button>
 
-<br>
-
+<button ng-click="wiki(wword)">Get Wiki</button>
+<input type = "text" ng-model="wword">
 <input type= "text" ng-model="wordy">
-<button ng-click="wordget(wordy)">Get wordnet</button>
+<button ng-click="wordget(wordy)">Get wordnet definition</button>
+<br>
+<br>
+<hr>
+<br>
+<div ng-model="ind" class = "ind_section">
+<p>
+<span ng-repeat="item in ind track by $index">{{item}} </span>
+</p>
+</div>
 
-<div ng-model="wordy">
+
+<div ng-model="wordy" class = "wordies">
   <div ng-repeat="word in wordy.info track by $index">
-    <ul>{{word.lemma}}
-      <li>{{word.def}} </li>
-      <li>{{word.gloss}} </li>
-      <li>{{word.pos}} </li>
-      </ul>
-    <hr>    
+    <ul><span style = "font-variant: small-caps; font-size: 1.2em;">Sense: {{word.lemma}} </span>
+      <li>Definition: {{word.def}} </li>
+      <li>Glossary: {{word.gloss}} </li>
+      <li> POS: {{word.pos}} </li>
+      </ul> 
   </div>
 
 </div>
 
-<br>
-
-<div ng-model="ind">
-<span ng-repeat="item in ind track by $index">{{item}} </span>
-</div>
 <hr>
-<div ng-model = "words">
+
+
+<div style="clear:left;" ng-bind-html="wword"></div>
+<!-- <div ng-model = "words">
   {{words}}
     <span ng-repeat="word in words track by $index">{{word.word}} </span>
   </div>
@@ -45,3 +53,4 @@
       </section>
         </div>
     </div>
+ -->
