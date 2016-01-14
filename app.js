@@ -8,7 +8,6 @@ var natural = require('natural');
 var wordnet = new natural.WordNet();
 var tokenizer = new natural.WordTokenizer();
 var wikipedia = require("wikipedia-js");
-
 var bodyParser = require('body-parser');
 var fs  = require('fs');
 var natty = require('./site/js/natural.js');
@@ -24,6 +23,8 @@ app.use(bodyParser.json());
 mongoose.connect('mongodb://userx:userxpass@ds035683.mongolab.com:35683/hegeltest');
 
 var router = express.Router();
+
+//Tell us when the route is being called
 router.use(function(req, res, next) {
     // do logging
     console.log('Something is happening.');
@@ -42,7 +43,6 @@ router.route('/hegels')
                     hegel.id = one.id;
                     hegel.text = one.paragraph[0];
                     hegel.type = one.type;
-
                     hegel.save(function(err){});
                 })
 
@@ -61,7 +61,9 @@ router.route('/hegels/:id')
 
     .get(function(req, res) {
         var id = req.params.id;
+
         console.log(id);
+
         Hegel.findOne({id:id}, function(err, hegel ){
             if(err){
                 console.log(err)
@@ -70,12 +72,7 @@ router.route('/hegels/:id')
             words[0]  = hegel.text.toString();
             words[0] = tokenizer.tokenize(words[0]);
 
-            /*natty.lookupmultiple(words[0]).then(function(data){
-                words[1] = data;
-
-                })*/
-            res.send(words);
-            
+            res.send(words);            
         })
     });
 
@@ -91,6 +88,7 @@ router.route('/hegels/word/:word')
 
 router.route('/wiki/:query')
     .get(function(req, res){
+
         var query = req.params.query;
         // if you want to retrieve a full article set summaryOnly to false. 
         // Full article retrieval and parsing is still beta 
@@ -115,9 +113,6 @@ router.route('/wiki/:query')
                 words = tokenizer.tokenize(words);
                 res.send(words);
             })
-//            natty.lookupmultiple(words).then(function(data){
-  //              res.send(data);
-    //        })
         });
 });
 
