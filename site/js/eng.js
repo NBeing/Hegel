@@ -19,7 +19,10 @@ var getit = function(url){
 module.exports.getit = getit;
 
 var get_data = function(cheer){
-    var $ = cheerio.load(cheer);
+    console.log("getting data");
+    return new Promise(function(fulfill, reject){
+        try{
+                var $ = cheerio.load(cheer);
     var p  = $('p');
     var english_array = [];
     p.each(function(){
@@ -49,6 +52,23 @@ var get_data = function(cheer){
             english_array.push(json);
         }
     })
-        return english_array;
+        fulfill(english_array);
+
+        } catch(ex){
+            reject(ex);
+        }
+    })
+
 }
 module.exports.get_data = get_data;
+
+var get_multiple_english = function (bodies){
+    var promises = [];
+    bodies.forEach(function(body){
+        console.log('Working');
+        promises.push(get_data(body));
+    })
+    return Promise.all(promises);
+}
+
+module.exports.get_multiple_english = get_multiple_english;

@@ -35,7 +35,7 @@ var scraper = require('./site/js/scraper.js');
 
 //Connect to mongodb database and require our hegel text schema
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://userx:userxpass@ds035683.mongolab.com:35683/hegeltest');
+mongoose.connect('mongodb://userx:userxpass@ds045465.mongolab.com:45465/alltest');
 var Hegel = require('./site/js/hegelscheme.js');
 
 
@@ -46,23 +46,64 @@ router.use(function(req, res, next) {
     next(); // make sure we go to the next routes and don't stop here
 });
 
-router.route('/hegels')
-    .post(function(req, res) {
+router.route('/hegels')  //Post or get the data to the mongodb database
+.post(function(req, res) {
 
-        eng.getit('https://www.marxists.org/reference/archive/hegel/works/ph/phaa.htm').
-            then(function(data){
-                var data = eng.get_data(data);
+            //This is the Table of Contents page for the Phenomenology    
+            url = 'https://www.marxists.org/reference/archive/hegel/works/ph/phconten.htm';
 
-                data.forEach(function(one){
-                    var hegel = new Hegel();
-                    hegel.id = one.id;
-                    hegel.text = one.paragraph[0];
-                    hegel.type = one.type;
-                    hegel.save(function(err){});
-                })
+            var bodies = [];
 
-            });
-    })
+    scraper.get_toc(url).then(function(data){ //Get the TOC from url
+        
+        scraper.get_links(data)               //Get all the links from the TOC
+        
+        .then(function(data){                 
+            return scraper.get_multiple(data); //Get all of the pages from the links           
+        })
+        
+        .then(function(data){
+            return eng.get_multiple_english(data);  //Parse all of the data into an object
+        })    
+        .then(function(data){
+            data.forEach(function(part){
+                console.log('Part');
+                part.forEach(function(one){
+                    if(one.id[one.id.length-1] == '.'){
+                        console.log("oh no period!");
+                        var newid = one.id.slice(0, one.id.length-1);
+                        one.id = parseInt(newid);
+                        console.log(one.id);
+                    }
+                var hegel = new Hegel();
+                hegel.id = one.id;
+                hegel.text = one.paragraph[0];
+                hegel.type = one.type;
+                hegel.save(function(err){});
+            })
+
+
+            })
+
+        });
+    });
+})
+        // Change this function to get multiple and put into database
+    //     eng.getit('https://www.marxists.org/reference/archive/hegel/works/ph/phaa.htm')
+        
+    //     .then(function(data){
+    //             var data = eng.get_data(data);
+
+    //             data.forEach(function(one){
+    //                 var hegel = new Hegel();
+    //                 hegel.id = one.id;
+    //                 hegel.text = one.paragraph[0];
+    //                 hegel.type = one.type;
+    //                 hegel.save(function(err){});
+    //             })
+
+    //         });
+    // })
     .get(function(req, res) {
         Hegel.find(function(err, hegels) {
             if (err)
@@ -72,25 +113,29 @@ router.route('/hegels')
         });
     });
 
-router.route('/hegels/:id')
+//Find a single ID in the mongodb database
+router.route('/hegels/:id')  
 
     .get(function(req, res) {
         var id = req.params.id;
 
-        console.log(id);
+        console.log("Getting: " +id);
 
         Hegel.findOne({id:id}, function(err, hegel ){
             if(err){
                 console.log(err)
             }
-            var words = [];
-            words[0]  = hegel.text.toString();
-            words[0] = tokenizer.tokenize(words[0]);
 
-            res.send(words);
+            var words = [];
+
+           words[0] = hegel.text.toString();
+           words[0] = tokenizer.tokenize(words[0]);
+
+           res.send(words);
         })
     });
 
+//Get a single word from the Wordnet Database
 router.route('/hegels/word/:word')
     .get( function(req , res ) {
         var word = req.params.word;
@@ -101,6 +146,8 @@ router.route('/hegels/word/:word')
         })
     })
 
+
+//Route for Wikipedia Queries
 router.route('/wiki/:query')
     .get(function(req, res){
 
@@ -132,23 +179,35 @@ app.get('/german', function(req, res){
         })
 })
 
+//This should get all of the relevant pages for Hegel's Phenomenology of Spirit
+// Todo: 
+    // 1) ALOT 
+    // 2) Add to MongoDB?
+    // 3) Desperately need an algorithm for storing the sections under chapter headings
+        // 3b) Once this is done make a new mongo schema
+            //3c) Hierarchy should be something like: 
+                //Book , Part ,Chapter, Section , Subsection etc
+    // 4) Remove duplicate links so we don't add them to the database twice (regexp)
+
 app.get('/scraper', function (req, res){
     
+    //This is the Table of Contents page for the Phenomenology    
     url = 'https://www.marxists.org/reference/archive/hegel/works/ph/phconten.htm';
     
     var bodies = [];
-    
-    scraper.get_toc(url).then(function(data){
-        scraper.get_links(data).then(function(data){
-           res.send(data[0]);
-            
-        //     data.each(function(){
-        //         var individual_page;
-        //         individual_page = get_toc($(this));
-        //         bodies.push(individual_page);
-        //     })
-        // res.send(bodies);            
-        });
+
+    scraper.get_toc(url).then(function(data){ //Get the TOC from url
+        scraper.get_links(data)               //Get all the links from the TOC
+        .then(function(data){                 
+            return scraper.get_multiple(data); //Get all of the pages from the links           
+        })
+        .then(function(data){
+            console.log('Fired');
+            return eng.get_multiple_english(data);  //Parse all of the data into an object
+        })
+        .then(function(data){  // Send all of the section data
+            res.send(data);
+        })
 
     });
 })

@@ -31,7 +31,7 @@ var look = function(word){
 }
 exports.look = look;
 
-var lookupmultiple =function(words){
+var lookupmultiple = function(words){
       var promises = [];
       words.forEach(function(word){
 

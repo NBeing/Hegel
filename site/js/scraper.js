@@ -3,7 +3,6 @@ var Promise = require('promise');
 var cheerio = require('cheerio');
 var request = require('request');
 
-
 var get_toc = function(url){
 	return new Promise(function(fulfill, reject){
 		try{
@@ -19,6 +18,17 @@ var get_toc = function(url){
 }
 module.exports.get_toc = get_toc;
 
+//We need to make a function that parses the links to make sure there are no doubles.
+var get_multiple = function(links){
+	var promises = [];
+
+	links.forEach(function(link){
+		console.log('working on' + link);
+		promises.push(get_toc(link))
+	})
+	return Promise.all(promises);
+}
+module.exports.get_multiple = get_multiple;
 var get_links = function(cheer){
 
 	return new Promise(function(fulfill, reject){
