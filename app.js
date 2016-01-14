@@ -133,10 +133,23 @@ app.get('/german', function(req, res){
 })
 
 app.get('/scraper', function (req, res){
+    
     url = 'https://www.marxists.org/reference/archive/hegel/works/ph/phconten.htm';
+    
+    var bodies = [];
+    
     scraper.get_toc(url).then(function(data){
-        data = scraper.get_links(data);
-        res.send(data);
+        scraper.get_links(data).then(function(data){
+           res.send(data[0]);
+            
+        //     data.each(function(){
+        //         var individual_page;
+        //         individual_page = get_toc($(this));
+        //         bodies.push(individual_page);
+        //     })
+        // res.send(bodies);            
+        });
+
     });
 })
 

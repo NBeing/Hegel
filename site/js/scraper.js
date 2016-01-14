@@ -20,20 +20,28 @@ var get_toc = function(url){
 module.exports.get_toc = get_toc;
 
 var get_links = function(cheer){
-	var $ = cheerio.load(cheer);
-	var links = [];
 
-	var all_anchors = $('a');
+	return new Promise(function(fulfill, reject){
 
-	all_anchors.each(function(){
-		var cur = $(this).attr('href');
-		var reg = /\.\.\/ph\//;
-		if( reg.test(cur) ) {
-			cur = cur.slice(2, cur.length);
-			var newtext = "https://www.marxists.org/reference/archive/hegel/works" + cur;
-			links.push(newtext);
-		} 
+		try{
+			var $ = cheerio.load(cheer);
+			var links = [];
+			var all_anchors = $('a');
+
+			all_anchors.each(function(){
+				var cur = $(this).attr('href');
+				var reg = /\.\.\/ph\//;
+				if( reg.test(cur) ) {
+					cur = cur.slice(2, cur.length);
+					var newtext = "https://www.marxists.org/reference/archive/hegel/works" + cur;
+					links.push(newtext);
+				} 
+			})
+			fulfill(links);
+		} catch(ex){
+			return(ex);
+		}
 	})
-	return links;
 }
 module.exports.get_links = get_links;
+
