@@ -22,7 +22,6 @@ module.exports.get_german = get_german;
 
 var scrape_german = function(cheer){
 	var $ = cheerio.load(cheer);
-	console.log('fired')
 	var german = return_german_obj($('body'));
 	function return_german_obj(german){
 

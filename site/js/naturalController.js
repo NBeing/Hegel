@@ -1,5 +1,5 @@
 
-app.controller('NaturalController' , [ '$scope', '$sce' , 'naturalFactory','englishFactory', 'wikiFactory', 'findlayFactory', function ($scope , $sce, naturalFactory, englishFactory , wikiFactory, findlayFactory){
+app.controller('NaturalController' , [ '$scope', '$sce' , 'naturalFactory','englishFactory', 'wikiFactory', 'findlayFactory', 'scrapeFactory', function ($scope , $sce, naturalFactory, englishFactory , wikiFactory, findlayFactory, scrapeFactory){
     
     //You should split this controller into other controllers in order to make your code more modular (wikiController, findlayController, wordnetController, englishController etc).
 
@@ -157,9 +157,12 @@ app.controller('NaturalController' , [ '$scope', '$sce' , 'naturalFactory','engl
         $scope.wiki($scope.initial_word);
         $scope.hi();
 
+        $scope.getScraper = scrapeFactory.getScraper;
+        $scope.getScraper().success(function(data){
+            $scope.scrape = data;
+        });
         $scope.findlays().success(function(data){
             $scope.finds = data;
-            console.log('complete');
         }).then(function(){
             $scope.getIndFind($scope.finds, $scope.section);
         })

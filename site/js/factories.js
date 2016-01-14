@@ -15,6 +15,13 @@ app.factory('englishFactory' , function ($http){
     return factory;
 })
 
+app.factory('scrapeFactory' , function ($http){
+    var factory = {};
+    factory.getScraper = function(){
+        return $http.get('http://localhost:3000/scraper')
+    }
+    return factory;
+})
 app.factory('germanFactory' , function ($http){
     var factory = {};
     factory.getGerman = function(){

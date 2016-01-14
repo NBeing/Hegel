@@ -31,7 +31,7 @@ var natty = require('./site/js/natural.js');
 var eng = require('./site/js/eng.js');
 var findlay = require('./site/js/findlay-scrape.js');
 var german = require('./site/js/german-scrape.js');
-
+var scraper = require('./site/js/scraper.js');
 
 //Connect to mongodb database and require our hegel text schema
 var mongoose = require('mongoose');
@@ -130,6 +130,14 @@ app.get('/german', function(req, res){
             data = german.scrape_german(data); 
             res.send(data);
         })
+})
+
+app.get('/scraper', function (req, res){
+    url = 'https://www.marxists.org/reference/archive/hegel/works/ph/phconten.htm';
+    scraper.get_toc(url).then(function(data){
+        data = scraper.get_links(data);
+        res.send(data);
+    });
 })
 
 app.get('/findlay', function(req, res){
