@@ -157,8 +157,9 @@ app.get('/english' , function(req, res){
 app.use('/api' , router);
 
 var server = app.listen(3000, function () {
-    var host = server.address().address;
-    var port = server.address().port;
+    var address = server.address().address
+    var host    = (address === '::' ? 'localhost' : address);
+    var port    = server.address().port;
 
     console.log('Example app listening at http://%s:%s', host, port);
 });
