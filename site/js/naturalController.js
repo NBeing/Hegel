@@ -1,6 +1,8 @@
 
 app.controller('NaturalController' , [ '$scope', '$sce' , 'naturalFactory','englishFactory', 'wikiFactory', 'findlayFactory', function ($scope , $sce, naturalFactory, englishFactory , wikiFactory, findlayFactory){
     
+    //You should split this controller into other controllers in order to make your code more modular (wikiController, findlayController, wordnetController, englishController etc).
+
     $scope.loadControls = function(){  //Load in UI
         $(document).unbind('keyup').bind('keyup', function (e) {
              var span = $('span');

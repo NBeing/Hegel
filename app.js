@@ -1,28 +1,43 @@
-var express = require('express');
-var app = express();
-var cheerio = require('cheerio');
-var request = require('request');
+//Utilities
 var Promise = require('promise');
 var async = require('async');
-var natural = require('natural');
-var wordnet = new natural.WordNet();
-var tokenizer = new natural.WordTokenizer();
-var wikipedia = require("wikipedia-js");
-var bodyParser = require('body-parser');
 var fs  = require('fs');
-var natty = require('./site/js/natural.js');
-var mongoose = require('mongoose');
-var eng = require('./site/js/eng.js');
-var Hegel = require('./site/js/bear.js');
 
+//Express App
+var express = require('express');
+var app = express();
+var bodyParser = require('body-parser');
+var router = express.Router();
 
 app.use(express.static('site'));
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
 
-mongoose.connect('mongodb://userx:userxpass@ds035683.mongolab.com:35683/hegeltest');
 
-var router = express.Router();
+//Libraries for parsing pages / helping to scrape
+var cheerio = require('cheerio');
+var request = require('request');
+
+//Load the node wikipedia module
+var wikipedia = require("wikipedia-js");
+
+//Loads Natural + functions + my own helper functions
+var natural = require('natural');
+var wordnet = new natural.WordNet();
+var tokenizer = new natural.WordTokenizer();
+var natty = require('./site/js/natural.js');
+
+//These load the functions for scraping 
+var eng = require('./site/js/eng.js');
+var findlay = require('./site/js/findlay-scrape.js');
+var german = require('./site/js/german-scrape.js');
+
+
+//Connect to mongodb database and require our hegel text schema
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://userx:userxpass@ds035683.mongolab.com:35683/hegeltest');
+var Hegel = require('./site/js/hegelscheme.js');
+
 
 //Tell us when the route is being called
 router.use(function(req, res, next) {
@@ -90,8 +105,6 @@ router.route('/wiki/:query')
     .get(function(req, res){
 
         var query = req.params.query;
-        // if you want to retrieve a full article set summaryOnly to false. 
-        // Full article retrieval and parsing is still beta 
         var options = {query: query, format: "html", summaryOnly: true};
         
         wikipedia.searchArticle(options, function(err, htmlWikiText){
@@ -104,18 +117,28 @@ router.route('/wiki/:query')
     })
     });
 
-    app.get('/natural' , function(req, res){
-        var words;
-        request('http://localhost:3000/api/hegels', function (error, response, body) {
-            body = JSON.parse(body);
-            body.forEach(function(one){
-                words= one.text.toString();
-                words = tokenizer.tokenize(words);
-                res.send(words);
-            })
-        });
-});
 
+
+//These three routes scrape of the section text (German, Findlay , English)
+    //  1) Need to make a scraper that starts from the TOC and then populates these
+    //  2) Figure out a way to get the headings   
+    //  3) Next you need to put these all into MongoDB
+
+app.get('/german', function(req, res){
+    german.get_german('https://www.marxists.org/deutsch/philosophie/hegel/phaenom/kap1.htm#p90')
+        .then(function(data){;
+            data = german.scrape_german(data); 
+            res.send(data);
+        })
+})
+
+app.get('/findlay', function(req, res){
+    findlay.get_findlay('https://www.marxists.org/reference/archive/hegel/help/findlay1.htm#m090')
+        .then(function(data){
+            data = findlay.scrape_findlay(data); 
+            res.send(data);
+        })
+})
 app.get('/english' , function(req, res){
     eng.getit('https://www.marxists.org/reference/archive/hegel/works/ph/phaa.htm').
         then(function(data){
@@ -123,120 +146,6 @@ app.get('/english' , function(req, res){
             res.send(data);
         });
 });
-
-app.get('/findlay' , function(req, res){
-    function parse(url) {
-        var content;
-
-        request(url, function (error, response, body) {
-            if (!error){
-                var
-                $ = cheerio.load(body);
-                //Findlay Function
-                var findlay_array = [];
-
-                var findlays  = $('body').find('a');
-
-                findlays.each(function(){
-                    var id , text , type;
-                    var json = { type: "findlay", id : "" , text: ""};
-                    var cur = $(this);
-                    var name;
-                    var reg = /m\d/ ||  /m\d\d/ || /m\d\d\d/;
-
-                    if( cur.attr('name') && reg.test(cur.attr('name'))){
-                        name = cur.attr('name');
-                        name = name.substring(1, name.length);
-
-                        if ( name[0] == "0"){
-                            name = name.substring(1,name.length);
-                        }
-                        next = cur.next();
-
-                        next.each(function(){
-                            $('span.point1').remove();
-                            json.id = name;
-                            json.text = $(this).text();
-                            findlay_array.push(json);
-                        });
-                            };
-                })
-                    res.send(findlay_array);
-                    }
-        })
-    }
-    parse('https://www.marxists.org/reference/archive/hegel/help/findlay1.htm#m090');
-});
-
-
-
-app.get('/german' , function(req, res){
-
-    function parse(url) {
-        var content;
-
-        request(url, function (error, response, body) {
-            if (!error){
-                var
-                $ = cheerio.load(body);
-
-                var german = return_german_obj($('body'));
-
-                function return_german_obj(german){
-                    var all = [];
-                    var p = german.find('p');
-                    p.each(function(){
-                        var id; var text;
-                        var item = {id: "" , text: ""};
-                        console.log($(this));
-                        var cur_p = $(this);
-                        var aa = cur_p.find('a');
-
-                        aa.each(function(){
-                            var a = $(this);
-                            var germ_reg = /p\d\d/ || /p\d\d\d/;
-
-                            if (germ_reg.test( a.attr('id'))){
-                                var id  = a.attr('id');
-                                id = id.slice(1,4) || id.slice(1,3) || id.slice(1,2);
-                                var german_text = a.parent().text();
-                                item.id = id;
-                                item.text = german_text;
-                                all.push(item);
-                            }
-                        })
-                            })
-                        return all;
-                }
-                res.send(german);
-            }
-        })
-    }
-    parse('https://www.marxists.org/deutsch/philosophie/hegel/phaenom/kap1.htm#p90');
-});
-
-app.get('/scrape', function(req, res){
-
-    url =  'http://gutenberg.readingroo.ms/2/5/5/5/25551/25551-8.txt';
-
-    request(url, function(error, response, html){
-        if(!error){
-            var content = "";
-            instance._ContentParseRecord( html , function(err, result){
-                content =  result.content;
-            });
-
-            function escapeRegExp(str) {
-                return str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
-            }
-            function replaceAll(str, find, replace) {
-                return str.replace(new RegExp(escapeRegExp(find), 'g'), replace);
-            }
-           content = replaceAll(content, '\r\n\r\n' , '</p><p>' );
-        res.send (content);
-        }
-    })
-})
 app.use('/api' , router);
 
 var server = app.listen(3000, function () {
