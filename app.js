@@ -165,12 +165,18 @@ app.get('/german', function(req, res){
 })
 
 app.get('/findlay', function(req, res){
-    findlay.get_findlay('https://www.marxists.org/reference/archive/hegel/help/findlay1.htm#m090')
+    findlay.make_links().then(function(data){
+            console.log(data);
+            return findlay.get_multiple(data);
+        })
         .then(function(data){
-            data = findlay.scrape_findlay(data);
+            return findlay.scrape_multiple(data);
+        })
+        .then(function(data){
             res.send(data);
         })
 })
+
 app.get('/english' , function(req, res){
     eng.getit('https://www.marxists.org/reference/archive/hegel/works/ph/phaa.htm').
         then(function(data){
