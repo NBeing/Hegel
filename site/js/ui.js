@@ -6,14 +6,14 @@
                 if($scope.state == false){
                 $('.findlay').toggle();
                 console.log('fire');
-                $('.ind_section').width('50%');
+                $('.ind_section').width('10%');
                 
                 $scope.state = true; 
                 }
                 else{
                     console.log('fire true');
                     $('.findlay').toggle();
-                       $('.ind_section').width('70%');
+                       $('.ind_section').width('100%');
                     $scope.state = false;
                 }
             }

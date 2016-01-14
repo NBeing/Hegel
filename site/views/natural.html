@@ -33,9 +33,11 @@ Here's a demo. It's super buggy, but I'm working at it.
 <hr>
 <br> -->
 <div ng-model="ind" class = "ind_section">
-<p>
-<span ng-repeat="item in ind track by $index">{{item}} </span>
-</p>
+  <p>
+    <span ng-repeat="item in ind track by $index">{{item}} </span>
+  </p>
+  
+<div style="clear:left;" ng-bind-html="wword"></div>
 
 </div>
 <div class = "findlay" ng-model="find">{{find}}</div>
@@ -49,30 +51,5 @@ Here's a demo. It's super buggy, but I'm working at it.
       <li> POS: {{word.pos}} </li>
       </ul> 
   </div>
-
 </div>
 
-<hr>
-
-
-<div style="clear:left;" ng-bind-html="wword"></div>
-<!-- <div ng-model = "words">
-  {{words}}
-    <span ng-repeat="word in words track by $index">{{word.word}} </span>
-  </div>
-  <div ng-model="words">
-    <div ng-repeat="word in words track by $index" href="/natural/#{{word}}">
-      <h1>Word: {{word.word}}</h1>
-
-      <section ng-repeat="info in word.info">
-
-        <ul>Sense : {{info.lemma}}
-          <li> Definition :  {{info.def}}</li>
-          <li> Glossary : {{info.gloss}}</li>
-          <li> Part of Speech : {{info.pos}}</li>
-          </ul>
-
-      </section>
-        </div>
-    </div>
- -->

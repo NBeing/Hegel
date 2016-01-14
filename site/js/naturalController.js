@@ -12,14 +12,14 @@ app.controller('NaturalController' , [ '$scope', '$sce' , 'naturalFactory','engl
                 if($scope.state == false){
                 $('.findlay').toggle();
                 console.log('fire');
-                $('.ind_section').width('50%');
+                $('.ind_section').width('40%');
                 
                 $scope.state = true; 
                 }
                 else{
                     console.log('fire true');
                     $('.findlay').toggle();
-                       $('.ind_section').width('70%');
+                       $('.ind_section').width('60%');
                     $scope.state = false;
                 }
             }

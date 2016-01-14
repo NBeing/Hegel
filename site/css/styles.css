@@ -38,8 +38,11 @@ tr {
 
 .ind_section{
   width: 70%;
+  min-height: 700px;
   float: left;
   margin-left: 2.5%;
+    padding: 25px;
+
 }
 .ind_section > p {
   line-height: 1.5em;
@@ -48,21 +51,26 @@ tr {
 }
 
 .wordies{
-  float: right;
-  width: 25%;
+position: fixed;
+right:0;
+  width: 20%;
   margin-right: 2.5%;
 
 }
 
 .wordies > div {
+
+
   border: 2px solid black;
   padding: .75em;
 }
 .wordies >div > ul {
   font-weight: bolder;
+  padding-left: 0px;
+
 } 
 .wordies >div > ul > li {
-
+  margin-bottom: 5px;
   font-family: Georgia;
   list-style-type: none;
 }
@@ -75,11 +83,13 @@ tr {
 .findlay{
   position: fixed;
   top: 5%;
+  padding: 20px;
   background-color: white;
   border: 1px solid black;
-  left:52%;
+  left:47%;
+  min-height: 700px;
   font-size: 1.25em;
-  width: 20%;
+  max-width: 25%;
   float: left;
   display: none;
 }
