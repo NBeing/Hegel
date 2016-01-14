@@ -1,3 +1,29 @@
+<h2> Hegel's Phenomenology of Spirit </h2>
+<h2> Section: {{section}}</h2>
+<span class="helpblurb"> Press 'h' for help</span>
+<span class="todoblurb"> Press 't' for To Do</span>
+
+<div ng-model="ind" class = "ind_section">
+  <p>
+    <span ng-repeat="item in ind track by $index">{{item}} </span>
+  </p>
+
+<div style="clear:left;" ng-bind-html="wword"></div>
+
+</div>
+<div class = "findlay" ng-model="find">{{find}}</div>
+
+
+<div ng-model="wordy" class = "wordies">
+  <div ng-repeat="word in wordy.info track by $index">
+    <ul><span style = "font-variant: small-caps; font-size: 1.2em;">Sense: {{word.lemma}} </span>
+      <li>Definition: {{word.def}} </li>
+      <li>Glossary: {{word.gloss}} </li>
+      <li> POS: {{word.pos}} </li>
+      </ul> 
+  </div>
+</div>
+
 <div id = 'help' >
 <p>Hello, (James or Eric),
 
@@ -22,29 +48,26 @@ Here's a demo. It's super buggy, but I'm working at it.
 </p>
 </div>
 
-<h2> Hegel's Phenomenology of Spirit </h2>
-<h2> Sense Certainty </h2>
-<h2> {{section}}</h2>
-<span class="helpblurb"> Press 'h' for help</span>
+<div id="todo">
+  <ul>
+    <ol> SCRAPING
+    <li> Pull out chapter headings</li>
+    </ol>
+    
+    <ol> DATA STRUCTURE 
+    <li> Reorganize data once we have chapters</li>
+    </ol>
 
-<div ng-model="ind" class = "ind_section">
-  <p>
-    <span ng-repeat="item in ind track by $index">{{item}} </span>
-  </p>
+    <ol> DATABASE 
+     <li> Add in Findlay</li>
+     <li> Add in German </li>
+     <li>
+     </ol>
 
-<div style="clear:left;" ng-bind-html="wword"></div>
+    <ol> UI 
+     <li> Make it so you don't have to press the left and right arrows too much</li>
+    </ol>
 
+   
+  </ul>
 </div>
-<div class = "findlay" ng-model="find">{{find}}</div>
-
-
-<div ng-model="wordy" class = "wordies">
-  <div ng-repeat="word in wordy.info track by $index">
-    <ul><span style = "font-variant: small-caps; font-size: 1.2em;">Sense: {{word.lemma}} </span>
-      <li>Definition: {{word.def}} </li>
-      <li>Glossary: {{word.gloss}} </li>
-      <li> POS: {{word.pos}} </li>
-      </ul> 
-  </div>
-</div>
-

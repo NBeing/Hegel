@@ -38,7 +38,6 @@ var mongoose = require('mongoose');
 mongoose.connect('mongodb://userx:userxpass@ds045465.mongolab.com:45465/alltest');
 var Hegel = require('./site/js/hegelscheme.js');
 
-
 //Tell us when the route is being called
 router.use(function(req, res, next) {
     // do logging
@@ -88,22 +87,6 @@ router.route('/hegels')  //Post or get the data to the mongodb database
         });
     });
 })
-        // Change this function to get multiple and put into database
-    //     eng.getit('https://www.marxists.org/reference/archive/hegel/works/ph/phaa.htm')
-        
-    //     .then(function(data){
-    //             var data = eng.get_data(data);
-
-    //             data.forEach(function(one){
-    //                 var hegel = new Hegel();
-    //                 hegel.id = one.id;
-    //                 hegel.text = one.paragraph[0];
-    //                 hegel.type = one.type;
-    //                 hegel.save(function(err){});
-    //             })
-
-    //         });
-    // })
     .get(function(req, res) {
         Hegel.find(function(err, hegels) {
             if (err)
@@ -114,6 +97,8 @@ router.route('/hegels')  //Post or get the data to the mongodb database
     });
 
 //Find a single ID in the mongodb database
+
+//Really need to figure out where the extra container is being added.
 router.route('/hegels/:id')  
 
     .get(function(req, res) {
@@ -177,39 +162,6 @@ app.get('/german', function(req, res){
             data = german.scrape_german(data);
             res.send(data);
         })
-})
-
-//This should get all of the relevant pages for Hegel's Phenomenology of Spirit
-// Todo: 
-    // 1) ALOT 
-    // 2) Add to MongoDB?
-    // 3) Desperately need an algorithm for storing the sections under chapter headings
-        // 3b) Once this is done make a new mongo schema
-            //3c) Hierarchy should be something like: 
-                //Book , Part ,Chapter, Section , Subsection etc
-    // 4) Remove duplicate links so we don't add them to the database twice (regexp)
-
-app.get('/scraper', function (req, res){
-    
-    //This is the Table of Contents page for the Phenomenology    
-    url = 'https://www.marxists.org/reference/archive/hegel/works/ph/phconten.htm';
-    
-    var bodies = [];
-
-    scraper.get_toc(url).then(function(data){ //Get the TOC from url
-        scraper.get_links(data)               //Get all the links from the TOC
-        .then(function(data){                 
-            return scraper.get_multiple(data); //Get all of the pages from the links           
-        })
-        .then(function(data){
-            console.log('Fired');
-            return eng.get_multiple_english(data);  //Parse all of the data into an object
-        })
-        .then(function(data){  // Send all of the section data
-            res.send(data);
-        })
-
-    });
 })
 
 app.get('/findlay', function(req, res){

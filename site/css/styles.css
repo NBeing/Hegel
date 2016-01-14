@@ -104,9 +104,37 @@ right:0;
   border-radius: 20px;
   padding: 20px;
 }
+
+#todo {
+  display: none;
+  position: fixed;
+  top: 10px;
+  background-color: black;
+  color: white;
+  font-size: 2em;
+  border-radius: 20px;
+  padding: 20px;
+}
+#todo > ul > ol{
+  margin-bottom: 1em;
+}
 .helpblurb{
   position: fixed; 
   bottom: 45px; 
+  left: 0px;
+  font-size: 1.5em;
+  background-color: black;
+  color: white;
+  padding-right: 5px;
+  padding-top:10px;
+  padding-bottom:10px;
+  border-bottom-right-radius:5px;
+  border-top-right-radius: 5px;
+}
+
+.todoblurb{
+  position: fixed; 
+  bottom: 120px; 
   left: 0px;
   font-size: 1.5em;
   background-color: black;

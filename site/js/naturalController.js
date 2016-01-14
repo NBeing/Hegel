@@ -10,6 +10,9 @@ app.controller('NaturalController' , [ '$scope', '$sce' , 'naturalFactory','engl
              if(event.which == 72){
                 $('#help').toggle();
              }
+                if(event.which == 84){
+                $('#todo').toggle();
+             }
             if(event.which == 70){
                 if($scope.state == false){
                     $('.findlay').toggle();
@@ -145,7 +148,7 @@ app.controller('NaturalController' , [ '$scope', '$sce' , 'naturalFactory','engl
     function init(){
         $scope.state = false;
         $scope.findlays = findlayFactory.getFindlays;
-        $scope.section = 91;
+        $scope.section = 1;
         $scope.initial_word = 'hegel';
         $scope.getInd = naturalFactory.getInd;
         $scope.getWiki = wikiFactory.getWiki;
