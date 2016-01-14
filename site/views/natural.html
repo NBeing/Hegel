@@ -1,4 +1,5 @@
-<!-- <p>Hello, (James or Eric),
+<div id = 'help' >
+<p>Hello, (James or Eric),
 
 Here's a demo. It's super buggy, but I'm working at it. 
 
@@ -17,26 +18,19 @@ Here's a demo. It's super buggy, but I'm working at it.
 
 <li>If you get a bug, press 'x' and then 'e' or 'q' to move to another section.</li>
 </ul>
-</p> -->
-<!-- <span class = "section-title">{{section}}</span>
-<input type= "text" ng-model="section">
+</p>
+</div>
 
+<h2> Hegel's Phenomenology of Spirit </h2>
+<h2> Sense Certainty </h2>
+<h2> {{section}}</h2>
+<span class="helpblurb"> Press 'h' for help</span>
 
-<button ng-click="getit(section)">Get Section</button>
-
-<button ng-click="wiki(wword)">Get Wiki</button>
-<input type = "text" ng-model="wword">
-<input type= "text" ng-model="wordy">
-<button ng-click="wordget(wordy)">Get wordnet definition</button>
-<br>
-<br>
-<hr>
-<br> -->
 <div ng-model="ind" class = "ind_section">
   <p>
     <span ng-repeat="item in ind track by $index">{{item}} </span>
   </p>
-  
+
 <div style="clear:left;" ng-bind-html="wword"></div>
 
 </div>

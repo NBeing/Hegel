@@ -7,14 +7,15 @@ app.controller('NaturalController' , [ '$scope', '$sce' , 'naturalFactory','engl
         $(document).unbind('keyup').bind('keyup', function (e) {
              var span = $('span');
              
+             if(event.which == 72){
+                $('#help').toggle();
+             }
             if(event.which == 70){
-                console.log($scope.state);
                 if($scope.state == false){
-                $('.findlay').toggle();
-                console.log('fire');
-                $('.ind_section').width('40%');
+                    $('.findlay').toggle();
+                    $('.ind_section').width('40%');
                 
-                $scope.state = true; 
+                    $scope.state = true; 
                 }
                 else{
                     console.log('fire true');
