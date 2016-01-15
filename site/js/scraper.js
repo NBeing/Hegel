@@ -23,7 +23,6 @@ var get_multiple = function(links){
 	var promises = [];
 
 	links.forEach(function(link){
-		console.log('working on' + link);
 		promises.push(get_toc(link))
 	})
 	return Promise.all(promises);

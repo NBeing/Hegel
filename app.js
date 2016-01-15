@@ -46,47 +46,67 @@ router.use(function(req, res, next) {
 });
 
 router.route('/hegels')  //Post or get the data to the mongodb database
+
 .post(function(req, res) {
 
-            //This is the Table of Contents page for the Phenomenology    
-            url = 'https://www.marxists.org/reference/archive/hegel/works/ph/phconten.htm';
+        //Get the findlays from the route;
+        var findlay_url = 'http://localhost:3000/findlay' 
 
-            var bodies = [];
+        var alldata =[];
+        //This is the Table of Contents page for the Phenomenology    
+        url = 'https://www.marxists.org/reference/archive/hegel/works/ph/phconten.htm';
+        findlay.get_findlay(findlay_url).then(function(data){
+            console.log('fired');
 
-    scraper.get_toc(url).then(function(data){ //Get the TOC from url
-        
-        scraper.get_links(data)               //Get all the links from the TOC
-        
-        .then(function(data){                 
-            return scraper.get_multiple(data); //Get all of the pages from the links           
+            console.log(typeof(data));
+            try{
+            data = JSON.parse(data);                
+            } catch (ex){
+                console.log(ex);
+            }
+
+            alldata.push(data);
         })
-        
-        .then(function(data){
-            return eng.get_multiple_english(data);  //Parse all of the data into an object
-        })    
-        .then(function(data){
-            data.forEach(function(part){
-                console.log('Part');
-                part.forEach(function(one){
-                    if(one.id[one.id.length-1] == '.'){
-                        console.log("oh no period!");
-                        var newid = one.id.slice(0, one.id.length-1);
-                        one.id = parseInt(newid);
-                        console.log(one.id);
-                    }
-                var hegel = new Hegel();
-                hegel.id = one.id;
-                hegel.text = one.paragraph[0];
-                hegel.type = one.type;
-                hegel.save(function(err){});
+        scraper.get_toc(url)
+            .then(function(data){ //Get the TOC from url    
+                return scraper.get_links(data)               //Get all the links from the TOC
+            })
+            
+            .then(function(data){                 
+                return scraper.get_multiple(data); //Get all of the pages from the links           
             })
 
-
+            .then(function(data){
+                return eng.get_multiple_english(data);  //Parse all of the data into an object
             })
+            .then(function(data){
 
-        });
-    });
-})
+                data.forEach(function(part){
+                    //console.log('Part');
+                    part.forEach(function(one){
+                        if(one.id[one.id.length-1] == '.'){
+                            //console.log("oh no period!");
+                            var newid = one.id.slice(0, one.id.length-1);
+                            one.id = parseInt(newid);
+                        }
+                        alldata[0].forEach(function(partial){
+                            console.log('Partial');
+                            partial.forEach(function(single){
+                                console.log(single.id);
+                        })
+
+
+                        })
+                        var hegel = new Hegel();
+                        hegel.id = one.id;
+                        hegel.text = one.paragraph[0];
+                        hegel.type = one.type;
+                        //hegel.save(function(err){});
+                    })
+                })
+            });
+        })
+
     .get(function(req, res) {
         Hegel.find(function(err, hegels) {
             if (err)
@@ -166,15 +186,14 @@ app.get('/german', function(req, res){
 
 app.get('/findlay', function(req, res){
     findlay.make_links().then(function(data){
-            console.log(data);
-            return findlay.get_multiple(data);
-        })
-        .then(function(data){
-            return findlay.scrape_multiple(data);
-        })
-        .then(function(data){
-            res.send(data);
-        })
+        return findlay.get_multiple(data);
+    })
+    .then(function(data){
+        return findlay.scrape_multiple(data);
+    })
+    .then(function(data){
+        res.send(data);
+    })
 })
 
 app.get('/english' , function(req, res){

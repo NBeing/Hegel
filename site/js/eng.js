@@ -19,7 +19,6 @@ var getit = function(url){
 module.exports.getit = getit;
 
 var get_data = function(cheer){
-    console.log("getting data");
     return new Promise(function(fulfill, reject){
         try{
                 var $ = cheerio.load(cheer);
@@ -65,7 +64,6 @@ module.exports.get_data = get_data;
 var get_multiple_english = function (bodies){
     var promises = [];
     bodies.forEach(function(body){
-        console.log('Working');
         promises.push(get_data(body));
     })
     return Promise.all(promises);
