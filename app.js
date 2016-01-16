@@ -48,25 +48,25 @@ router.use(function(req, res, next) {
 router.route('/hegels')  //Post or get the data to the mongodb database
 
 .post(function(req, res) {
+        
+        var alldata = [];
 
         //Get the findlays from the route;
         var findlay_url = 'http://localhost:3000/findlay' 
 
-        var alldata =[];
+        
         //This is the Table of Contents page for the Phenomenology    
         url = 'https://www.marxists.org/reference/archive/hegel/works/ph/phconten.htm';
+        
         findlay.get_findlay(findlay_url).then(function(data){
-            console.log('fired');
-
-            console.log(typeof(data));
             try{
             data = JSON.parse(data);                
             } catch (ex){
                 console.log(ex);
             }
-
             alldata.push(data);
         })
+
         scraper.get_toc(url)
             .then(function(data){ //Get the TOC from url    
                 return scraper.get_links(data)               //Get all the links from the TOC
@@ -75,37 +75,100 @@ router.route('/hegels')  //Post or get the data to the mongodb database
             .then(function(data){                 
                 return scraper.get_multiple(data); //Get all of the pages from the links           
             })
-
             .then(function(data){
                 return eng.get_multiple_english(data);  //Parse all of the data into an object
             })
             .then(function(data){
 
-                data.forEach(function(part){
-                    //console.log('Part');
-                    part.forEach(function(one){
+                function fixdata(data){
+                    var first = data[0];
+                    for(var  i = 1 ; i < data.length; i++){
+                        data[i].forEach(function(one){
+                            first.push(one);
+                        })
+                    }
+                    return first;
+                }
+                var hegeldata = fixdata(data);
+
+                function fixid(data){
+                    data.forEach(function(one){
                         if(one.id[one.id.length-1] == '.'){
-                            //console.log("oh no period!");
+                            console.log('fired');
                             var newid = one.id.slice(0, one.id.length-1);
                             one.id = parseInt(newid);
                         }
-                        alldata[0].forEach(function(partial){
-                            console.log('Partial');
-                            partial.forEach(function(single){
-                                console.log(single.id);
-                        })
+                    });
+                    return data;
+                }
+                hegeldata = fixid(hegeldata);
 
-
-                        })
-                        var hegel = new Hegel();
-                        hegel.id = one.id;
-                        hegel.text = one.paragraph[0];
-                        hegel.type = one.type;
-                        //hegel.save(function(err){});
+                function returnone(data , num){
+                    var theone;
+                    data.forEach(function(one){
+                        if (one.id == num ){
+                            theone = one;
+                        }
                     })
-                })
+                    return theone;
+                }
+
+                function getpair(hegel , findlay , num){
+                    var both = {};
+                    both.hegel = returnone(hegel, num);
+                    both.findlay = returnone(findlay, num);
+                    return both;
+                }
+                
+                var findlaydata = alldata[0];
+                findlaydata = fixdata(findlaydata);
+
+                var both = getpair(hegeldata,findlaydata,100);
+
+                function getmanypair(hegeldata , findlaydata, low , high){
+                    var many = [];
+                    for(var i = low; i <= high; i++){
+                        many.push(getpair(hegeldata, findlaydata, i));
+                    }
+                    return many
+                }
+                var many = getmanypair(hegeldata, findlaydata, 5,10);
+                
+                res.send(many);
+
+                var hegel = new Hegel();
+                hegel.hegel.id = both.hegel.id;
+                hegel.hegel.type = both.hegel.type;
+                hegel.hegel.text = both.hegel.text;
+                hegel.findlay.id = both.findlay.id;
+                hegel.findlay.type = both.findlay.type;
+                hegel.findlay.text = both.findlay.text;
+
+
+                // data.forEach(function(part){
+                //     //console.log('Part');
+                //     part.forEach(function(one){
+                //         if(one.id[one.id.length-1] == '.'){
+                //             var newid = one.id.slice(0, one.id.length-1);
+                //             one.id = parseInt(newid);
+                //         }
+                //         alldata[0].forEach(function(partial){
+                //             partial.forEach(function(single){
+                //                 if(one.id == single.id){
+                //                     console.log("it is");
+                //                 }
+                //             })
+                //         })
+
+                //         var hegel = new Hegel();
+                //         hegel.id = one.id;
+                //         hegel.text = one.paragraph[0];
+                //         hegel.type = one.type;
+                //         //hegel.save(function(err){});
+                //     })
+                // })
             });
-        })
+})
 
     .get(function(req, res) {
         Hegel.find(function(err, hegels) {
@@ -139,6 +202,23 @@ router.route('/hegels/:id')
            res.send(words);
         })
     });
+
+
+//Building a test function for determining which sections belong in which chapter
+
+var urls = 'https://www.marxists.org/reference/archive/hegel/works/ph/phaa.htm';
+    request(urls, function(error, response,body){
+                if (!error && response.statusCode == 200) {
+
+                    // h3.each(function(){
+                    //     var btw = $(this).nextUntil('h3');
+                    //     btw.each(function(){
+                    //         console.log($(this));
+                    //     })
+                    // })
+
+                }
+            })
 
 //Get a single word from the Wordnet Database
 router.route('/hegels/word/:word')
@@ -202,6 +282,53 @@ app.get('/english' , function(req, res){
             var data = eng.get_data(data);
             res.send(data);
         });
+});
+
+
+//(WIP) get the number of each section within each chapter
+app.get('/toc' , function(req, res){
+
+//This is the Table of Contents page for the Phenomenology
+var url2 = 'https://www.marxists.org/reference/archive/hegel/works/ph/phconten.htm';
+        
+scraper.get_toc(url2).then(function(data){
+    return scraper.get_toc(url2);
+})
+.then(function(data){
+    return scraper.get_links(data);
+})
+.then(function(data){
+    return scraper.get_multiple(data);
+})
+
+.then(function(data){
+ var arr = [];
+   data.forEach(function(body){
+                    try{var $ = cheerio.load(body);}
+                    catch(ex){console.log(ex);}
+                   
+                    var h1 = $('h1');
+                    var h3 = $('h3');
+                    var first_h3 = $('body').find('h3').first();
+                    var btw = first_h3.nextUntil('h3');
+                    btw.each(function(){
+                        if( $(this).is('p') ){
+                            var a = $(this).find('a');
+                            a.each(function(){
+                                var possible = $(this).text();
+                                var reg  =/\d\d/ ||  /\d\d\d/;
+
+                                if (reg.test(possible)){
+                                    arr.push(possible);
+                                }
+                            })
+                        }
+                    })
+
+
+})
+      res.send(arr);
+                 })
 });
 app.use('/api' , router);
 

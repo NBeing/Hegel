@@ -8,9 +8,5 @@ app.config(function($routeProvider){
         .when('/sections',
               {controller: 'FindlayController',
                templateUrl: '/views/hegel.html'
-              })
-        .when('/scraper',
-        	{controller: 'NaturalController',
-        	templateUrl: '/views/scraper.html'
-        })
-});
+              }
+)});

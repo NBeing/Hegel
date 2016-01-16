@@ -57,7 +57,6 @@ var get_data = function(cheer){
             reject(ex);
         }
     })
-
 }
 module.exports.get_data = get_data;
 

@@ -1,11 +1,16 @@
 
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-
-var HegelSchema = new Schema({
-    text: String,
+var SectionSchema = new Schema({
+	text: String,
     id: String,
-    type: String
+    type: String 
+})
+var HegelSchema = new Schema({
+	hegel: {SectionSchema},
+	findlay: {SectionSchema}
 });
+
+
 module.exports = mongoose.model('Hegel', HegelSchema);
 
