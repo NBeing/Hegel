@@ -48,30 +48,28 @@ router.use(function(req, res, next) {
 router.route('/hegels')  //Post or get the data to the mongodb database
 
 .post(function(req, res) {
-        
-        var alldata = [];
+
+    var alldata = [];
 
         //Get the findlays from the route;
         var findlay_url = 'http://localhost:3000/findlay' 
-
         
         //This is the Table of Contents page for the Phenomenology    
         url = 'https://www.marxists.org/reference/archive/hegel/works/ph/phconten.htm';
         
         findlay.get_findlay(findlay_url).then(function(data){
             try{
-            data = JSON.parse(data);                
+                data = JSON.parse(data);                
             } catch (ex){
                 console.log(ex);
             }
             alldata.push(data);
         })
 
-        scraper.get_toc(url)
-            .then(function(data){ //Get the TOC from url    
-                return scraper.get_links(data)               //Get all the links from the TOC
+        scraper.get_toc(url)  //Get the TOC from url
+            .then(function(data){     
+                return scraper.get_links(data);   //Get all the links from the TOC
             })
-            
             .then(function(data){                 
                 return scraper.get_multiple(data); //Get all of the pages from the links           
             })
@@ -80,104 +78,29 @@ router.route('/hegels')  //Post or get the data to the mongodb database
             })
             .then(function(data){
 
-                function fixdata(data){
-                    var first = data[0];
-                    for(var  i = 1 ; i < data.length; i++){
-                        data[i].forEach(function(one){
-                            first.push(one);
-                        })
-                    }
-                    return first;
-                }
-                var hegeldata = fixdata(data);
-
-                function fixid(data){
-                    data.forEach(function(one){
-                        if(one.id[one.id.length-1] == '.'){
-                            console.log('fired');
-                            var newid = one.id.slice(0, one.id.length-1);
-                            one.id = parseInt(newid);
-                        }
-                    });
-                    return data;
-                }
-                hegeldata = fixid(hegeldata);
-
-                function returnone(data , num){
-                    var theone;
-                    data.forEach(function(one){
-                        if (one.id == num ){
-                            theone = one;
-                        }
-                    })
-                    return theone;
-                }
-
-                function getpair(hegel , findlay , num){
-                    var both = {};
-                    both.hegel = returnone(hegel, num);
-                    both.findlay = returnone(findlay, num);
-                    return both;
-                }
+                var hegeldata = eng.fixdata(data);
+                hegeldata = eng.fixid(hegeldata);
                 
                 var findlaydata = alldata[0];
-                findlaydata = fixdata(findlaydata);
+                findlaydata = eng.fixdata(findlaydata);
 
-                var both = getpair(hegeldata,findlaydata,100);
+                var many = eng.getmanypair(hegeldata, findlaydata, 1, 500);
 
-                function getmanypair(hegeldata , findlaydata, low , high){
-                    var many = [];
-                    for(var i = low; i <= high; i++){
-                        many.push(getpair(hegeldata, findlaydata, i));
-                    }
-                    return many
-                }
-                var many = getmanypair(hegeldata, findlaydata, 5,10);
-                
-                res.send(many);
-
-                var hegel = new Hegel();
-                hegel.hegel.id = both.hegel.id;
-                hegel.hegel.type = both.hegel.type;
-                hegel.hegel.text = both.hegel.text;
-                hegel.findlay.id = both.findlay.id;
-                hegel.findlay.type = both.findlay.type;
-                hegel.findlay.text = both.findlay.text;
-
-
-                // data.forEach(function(part){
-                //     //console.log('Part');
-                //     part.forEach(function(one){
-                //         if(one.id[one.id.length-1] == '.'){
-                //             var newid = one.id.slice(0, one.id.length-1);
-                //             one.id = parseInt(newid);
-                //         }
-                //         alldata[0].forEach(function(partial){
-                //             partial.forEach(function(single){
-                //                 if(one.id == single.id){
-                //                     console.log("it is");
-                //                 }
-                //             })
-                //         })
-
-                //         var hegel = new Hegel();
-                //         hegel.id = one.id;
-                //         hegel.text = one.paragraph[0];
-                //         hegel.type = one.type;
-                //         //hegel.save(function(err){});
-                //     })
-                // })
+                 var secs = eng.make_many_sections(many);
+                //eng.save_many(secs);
+               
+                res.send(secs);
             });
 })
 
-    .get(function(req, res) {
-        Hegel.find(function(err, hegels) {
-            if (err)
-                res.send(err);
+.get(function(req, res) {
+    Hegel.find(function(err, hegels) {
+        if (err)
+            res.send(err);
 
-            res.json(hegels);
-        });
+        res.json(hegels);
     });
+});
 
 //Find a single ID in the mongodb database
 
@@ -189,36 +112,21 @@ router.route('/hegels/:id')
 
         console.log("Getting: " +id);
 
-        Hegel.findOne({id:id}, function(err, hegel ){
+        Hegel.findOne({number:id}, function(err, hegel ){
             if(err){
                 console.log(err)
             }
 
             var words = [];
-
-           words[0] = hegel.text.toString();
+            console.log(hegel.hegel);
+            //Gotta fix this so it adds both arrays
+           words[0] = hegel.hegel.text[0];
            words[0] = tokenizer.tokenize(words[0]);
 
            res.send(words);
         })
     });
 
-
-//Building a test function for determining which sections belong in which chapter
-
-var urls = 'https://www.marxists.org/reference/archive/hegel/works/ph/phaa.htm';
-    request(urls, function(error, response,body){
-                if (!error && response.statusCode == 200) {
-
-                    // h3.each(function(){
-                    //     var btw = $(this).nextUntil('h3');
-                    //     btw.each(function(){
-                    //         console.log($(this));
-                    //     })
-                    // })
-
-                }
-            })
 
 //Get a single word from the Wordnet Database
 router.route('/hegels/word/:word')

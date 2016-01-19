@@ -1,14 +1,16 @@
 
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var SectionSchema = new Schema({
-	text: String,
+
+var ParagraphSchema = new Schema({
+	text: Array,
     id: String,
     type: String 
 })
-var HegelSchema = new Schema({
-	hegel: {SectionSchema},
-	findlay: {SectionSchema}
+var HegelSchema = new Schema({  //Change name to section schema
+	number: Number,
+	hegel: ParagraphSchema,
+	findlay: ParagraphSchema
 });
 
 
