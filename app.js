@@ -120,8 +120,15 @@ router.route('/hegels/:id')
             var words = [];
             console.log(hegel.hegel);
             //Gotta fix this so it adds both arrays
-           words[0] = hegel.hegel.text[0];
-           words[0] = tokenizer.tokenize(words[0]);
+           words[0] = [];
+           hegel.hegel.text.forEach(function(one){
+            words[0].push(one);
+           })
+           words[0].forEach(function(one , index){
+            words[index] = tokenizer.tokenize(one);
+           })
+
+           //words[0] = tokenizer.tokenize(words[0]);
 
            res.send(words);
         })
