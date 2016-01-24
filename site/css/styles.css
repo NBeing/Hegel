@@ -145,3 +145,27 @@ right:0;
   border-bottom-right-radius:5px;
   border-top-right-radius: 5px;
 }
+
+.h1 > span {
+  font-size: 1.5em;
+  border: 1px solid black;
+  padding: 5px;
+}
+.h3{
+  margin-left:5%;
+}
+.h3 > span {
+  border-bottom: 2px solid black;
+  line-height: 1.2em;
+  font-size: 1.5em;
+}
+.h4{
+    font-size: 1.25em;
+  margin-left:10%;
+}
+li.toc {
+  font-size: 1em !important;
+  margin-left: 5%;
+  font-size: .8em;
+  display: inline;
+}

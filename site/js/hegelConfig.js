@@ -8,5 +8,9 @@ app.config(function($routeProvider){
         .when('/sections',
               {controller: 'FindlayController',
                templateUrl: '/views/hegel.html'
+              })
+              .when('/toc',
+              {controller: 'TocController',
+               templateUrl: '/views/toc.html'
               }
 )});

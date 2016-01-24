@@ -7,6 +7,14 @@ app.factory('findlayFactory' , function ($http){
     return factory;
 })
 
+app.factory('tocFactory' , function ($http){
+    var factory = {};
+    factory.getToc = function(){
+        console.log('getting TOC');
+        return $http.get('http://localhost:3000/toc')
+    }
+    return factory;
+})
 app.factory('englishFactory' , function ($http){
     var factory = {};
     factory.getEnglish = function(){

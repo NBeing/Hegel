@@ -1,0 +1,40 @@
+<h1> Hegel's Phenomenology of Spirit </h1>
+<h2> Table of Contents </h2>
+<div ng-model="toc.data">
+
+<div ng-repeat="item in toc.data">
+
+	<span ng-if="item.type == 'h1'" >
+		<div class = "h1">
+			<span> {{item.title}} </span>
+			<ul class ="toc">
+		<li class = "toc" ng-repeat="subsection in item.subsections track by $index">
+		{{subsection}} </li>
+		</ul>
+		</div>
+	</span>
+
+	<span ng-if="item.type == 'h3'" >
+		<div class = "h3">
+			<span> {{item.title}} </span>
+			<ul class ="toc">
+		<li class = "toc" ng-repeat="subsection in item.subsections track by $index">
+		{{subsection}} </li>
+		</ul>
+		</div>
+	</span>
+
+	<span ng-if="item.type == 'h4'" >
+		<div class = "h4">
+			<span> {{item.title}} </span>
+			<ul class ="toc">
+		<li class = "toc"  ng-repeat="subsection in item.subsections track by $index">
+		{{subsection}} </li>
+		</ul>
+		</div>
+	</span>
+	
+	
+</div>
+
+</div>
