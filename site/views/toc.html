@@ -2,39 +2,28 @@
 <h2> Table of Contents </h2>
 <div ng-model="toc.data">
 
-<div ng-repeat="item in toc.data">
-
-	<span ng-if="item.type == 'h1'" >
-		<div class = "h1">
-			<span> {{item.title}} </span>
-			<ul class ="toc">
-		<li class = "toc" ng-repeat="subsection in item.subsections track by $index">
-		{{subsection}} </li>
-		</ul>
+	<section class = "chapter" ng-repeat="item in toc.data">
+		
+		<div class ="entry">
+			<span class = "chapter title">{{item.title}}</span>
+			<ul class = "chapter sections">
+				<li class="toc chapter" ng-repeat="sections in item.subsections">{{sections}}</li> 
+			</ul>
 		</div>
-	</span>
 
-	<span ng-if="item.type == 'h3'" >
-		<div class = "h3">
-			<span> {{item.title}} </span>
-			<ul class ="toc">
-		<li class = "toc" ng-repeat="subsection in item.subsections track by $index">
-		{{subsection}} </li>
-		</ul>
-		</div>
-	</span>
+			<div class="subchapter" ng-repeat="subchapter in item.subchapters"> 
+				<span class = "subchapter title"> {{subchapter.title}} </span>
+				
 
-	<span ng-if="item.type == 'h4'" >
-		<div class = "h4">
-			<span> {{item.title}} </span>
-			<ul class ="toc">
-		<li class = "toc"  ng-repeat="subsection in item.subsections track by $index">
-		{{subsection}} </li>
-		</ul>
-		</div>
-	</span>
+
+					<ul class = "subsect">
+						<li class = "toc" ng-repeat="sect in subchapter.subsections">{{sect}}</li>
+					</ul>
+			</div>
 	
-	
-</div>
+	<div id="sectiontext" ng-model="sectiontext"> 
+	<li ng-repeat="para in sectiontext"> <p><span class="word" ng-repeat="word in para track by $index">{{word}} </span></p></li>
+	</div>
 
-</div>
+	</div>
+</section>

@@ -1,4 +1,4 @@
- $(document).unbind('keyup').bind('keyup', function (e) {
+ $(document).bind('keydown', function (e) {
              var span = $('span');
              
             if(event.which == 70){
