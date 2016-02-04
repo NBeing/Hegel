@@ -9,7 +9,7 @@ app.config(function($routeProvider){
               {controller: 'FindlayController',
                templateUrl: '/views/hegel.html'
               })
-              .when('/toc',
+              .when('/',
               {controller: 'TocController',
                templateUrl: '/views/toc.html'
               }

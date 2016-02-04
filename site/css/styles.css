@@ -106,7 +106,6 @@ right:0;
   margin-right: 2.5%;
 
 }
-
 .wordies > div {
 
 
@@ -230,7 +229,7 @@ li.toc {
 section.chapter{
   margin-bottom: 5vh;
   border-radius: 50px;
-  display: none;
+  /*display: none; */
 }
 li.toc.chapter{
   float: none;
@@ -271,17 +270,17 @@ span.chapter.title {
   margin-top: 2.5vh;
 }
 
-li.toc.focus{
+li.section.focus{
     color: white;
   background-color: black;
 }
-div#sectiontext{
+/*div#sectiontext{
   position: fixed;
   bottom:0;
   width: 80vw;
   padding: 1em;
   background-color: white;
-}
+}*/
 
 /*
 span.subchapter.title {
@@ -302,3 +301,125 @@ div.subchapter{
   float: right;
   display: inline;
 }*/
+
+#toc {
+  padding: 25px;
+  font-family: 'Josefin Slab', serif;
+  display: block;
+
+}
+#back{
+  height: 100vh;
+  width: 50vw;
+  background-color: #CDCDC1;
+  overflow: hidden;
+  display: inline-block;
+}
+#back * {
+  background-color: inherit;
+}
+
+span.word.current-word{
+  border-bottom: 1px solid black;
+}
+
+#toc h1 , #toc h2 , #toc h3 , #toc h4{
+  float: left;
+  clear: both;
+  text-align: left;
+  font-weight: 700;
+}
+#toc h1 {
+  font-size: 1.5em;
+}
+#toc h2{
+  margin-left: 2em;  
+  font-size: 1.4em;
+}
+#toc h3{
+ margin-left: 4em; 
+ font-size: 1.3em; 
+}
+#toc h4{
+  font-size: 1.2em; 
+  margin-left: 6em;
+}
+
+#toc ul.sections > li.section {
+  color: red;
+  display: inline-block;
+  font-size: 1.1em;
+  font-weight: 600;
+  margin-left: 1em;
+}
+
+#toc ul.sections {
+    clear: both;
+    float: left;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    width: 80%;
+    height: auto;
+}
+
+#toc ul.sections:after {
+   content: " "; /* Older browser do not support empty content */
+   visibility: hidden;
+   display: block;
+   height: 0;
+   clear: both;
+}
+#toc ul.sections > li.section.focus {
+  color: black;
+  font-size: 1.35em;
+}
+
+section.first-chapter > ul {
+  margin-left: 2em;
+}
+section.sub-chapter > ul {
+  margin-left: 4em;
+}
+section.sub-sub-chapter > ul {
+  margin-left: 6em;
+}
+
+section.sub-sub-sub-chapter > ul {
+  margin-left: 8em;
+}
+
+section.part{
+  display: none;
+}
+
+#text {
+  float:right;
+  width:48vw;
+  height: 100vh;
+  display: inline-block;
+  padding: 20px;
+  line-height: 1.7em;
+  box-sizing: border-box;
+}
+#findlaytext{
+  border: 1px solid black;
+}
+#sectiontext {
+  height: 50vh;
+  overflow: hidden;
+}
+#sectiontext > li {
+  font-size: 1.2em;
+  list-style-type: none;
+  font-family: 'Vollkorn', serif;
+}
+#text.full {
+  float: none;
+  width: 70vw;
+  margin-left: 15vw;
+  margin-top: 10vh;
+}
+
+.black{
+  background-color: black;
+}

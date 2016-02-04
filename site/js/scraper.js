@@ -299,6 +299,361 @@ var convert_to_obj = function ( allofem ){
 }
 module.exports.convert_to_obj = convert_to_obj;
 
+function look(table , index, delta ){
+    return table[index+delta];
+}
+
+function find_next_of_type(cur, type){
+    if(cur.type == type){
+
+    }
+}
+
+var look_until =  function(type , table , index , arr){
+    var counter = 1;
+    var newarr = arr;
+    var non = false;
+    do { 
+        //console.log("doing");
+        try{
+        var cur = look(table , index , counter);
+        console.log("working on " + cur.title)            
+        } catch (ex) {
+            console.log(ex);
+        }
+        if (!cur) {
+            console.log(" no item");
+            non = true;
+            newarr.push(cur);
+        }
+        if(cur.type == type){
+            console.log("Found same type on " + cur.title)
+            non = true;
+        } else if(cur.type != type){
+            console.log("Found diff type")
+            console.log("Pushing : " + cur.type + " " + cur.title);
+            newarr.push(cur);
+            counter = counter+1;
+        } 
+    } while(non == false)
+    console.log(newarr);
+    return newarr;
+}
+
+var getSubchapters = function(chapter){
+    var subchapters  = [];
+    if(chapter.subchapters && chapter.subchapters.length > 0 ){
+        chapter.subchapters.forEach(function(subchapter){
+            subchapters.push(subchapter);
+        })
+    }
+    return subchapters;
+}
+module.exports.getsubchapters = getSubchapters;
+
+var checkForChapter = function(chapter,  title){
+        if(chapter.title && chapter.title == title){
+            return chapter;
+        } else {
+            return false;
+        }
+}
+module.exports.checkForChapter = checkForChapter;
+
+var lookForChapter = function(table , title ){
+    
+    table.forEach(function(chapter){
+        var subchaps = getSubchapters(chapter);
+        if( checkForChapter(chapter , title ) != false ){
+            console.log(checkForChapter(chapter , title ));
+        }
+
+        subchaps.forEach(function( subchapter){
+            var subsubchaps = getSubchapters(subchapter);
+            if( checkForChapter(subchapter , title ) != false ){
+                   console.log(checkForChapter(subchapter , title ));
+            }
+            subsubchaps.forEach(function(subsubchapter){
+                                    console.log(subsubchapter.title)
+                var subsubsubchaps = getSubchapters(subsubchapter);
+                if( checkForChapter(subsubchapter , title ) != false ){
+                       console.log(checkForChapter(subsubchapter , title ));
+                }
+                subsubsubchaps.forEach(function(subsubsubchapter){
+
+                    var subsubsubsubchaps = getSubchapters(subsubsubchapter);
+                    if( checkForChapter(subsubsubchapter , title ) != false ){
+                           console.log(checkForChapter(subsubsubchapter , title ));
+                    } 
+                     if (subsubsubchapter.subchapters.length > 0){
+                        console.log("Theres more buddy");
+                    }
+                })
+            })
+        })
+    })
+}
+module.exports.lookForChapter = lookForChapter;
+
+var nest_chapters2 = function (table){
+    
+    var newtable = [];
+    var prev_h1 = [];
+    var prev_h3 = [];
+    var h1 = [];
+    var h3 = [];
+    var h4 = [];
+    var h5 = [];
+
+    table.forEach(function(item , index ){
+        item.subchapters = [];
+
+        
+        if(item.type == 'h1'){
+            console.log("Found h1 . . .");
+            var h1s = look_until('h1' , table , index , h1);
+
+            h1s.forEach(function( it , index2){
+                if(it.type == 'h3'){
+                    console.log("found h3");
+                    try{
+                        h4 = look_until('h3', h1s , index2 , h4);
+                        it.subchapters.push(h4)
+
+                        h4 = [];
+                    } catch (ex){
+                        console.log(ex);
+
+                    }
+                    h3.push(it);
+                    // h4s.forEach(function(el){
+                    //     console.log(el);
+                    // })
+                    // h3.push(it);
+                }
+                if(it.type == 'h4'){
+                    console.log("found h4");
+                }
+                if(it.type == 'h1'){
+                        console.log("Push it now");
+                    }
+                // if(it.type == 'h4'){
+                //     var x = look_until('h5', );
+                // }
+            })
+            item.subchapters = h3;
+            console.log(h3);
+            h3 = []
+        }
+        newtable.push(item);
+    })
+
+    return newtable;
+}
+module.exports.nest_chapters2 = nest_chapters2;
+function pushall ( dest ){
+    var self = this;
+    if(Array.isArray(self) && Array.isArray(dest)){
+        dest.forEach(function(item){
+            self.push(item);
+        })
+
+    }else{
+        console.log("Not an array!");
+    }
+}
+
+function unshiftall ( dest ){
+    var self = this;
+    if(Array.isArray(self) && isArray(dest)){
+        dest.forEach(function(item){
+            self.unshift(item);
+        })
+
+    }else{
+        console.log("Not an array!");
+    }
+}
+
+
+var oldarray = ['a','b','c'];
+var newarray = ['d','e','f'];
+Array.prototype.unshiftall = unshiftall;
+Array.prototype.pushall = pushall;
+oldarray.pushall(newarray);
+console.log(oldarray);
+
+
+function process( arr ){
+    var newarr = [];
+    temp = [];
+    
+    for(var i = arr.length-1 ; i >=0 ; i--){
+        if( i == 0){
+            try{
+                arr[i].subchapters.pushall(newarr);
+                return arr[i]                
+            } catch(ex){
+                console.log(ex);
+            }
+        } 
+        else if(arr[i-1].type == arr[i].type){
+            try{
+                temp.unshift(arr[i])
+            } catch(ex){
+                console.log(ex);
+            }
+
+        } else if(arr[i-1].type != arr[i].type){
+            if(    arr[i-1].type == 'h5' && arr[i].type == 'h4'
+                || arr[i-1].type == 'h4' && arr[i].type == 'h3' //what about h5 && h3
+                || arr[i-1].type == 'h5' && arr[i].type == 'h3'
+               
+                ){
+                try{
+                    arr[i].subchapters.pushall(temp);
+                    temp = [];
+                    newarr.unshift(arr[i])                    
+                } catch (ex) {
+                    console.log(ex);
+                }
+
+            } else{
+                try{
+                    console.log("firing normal 'else'")
+                    temp.unshift(arr[i])
+
+                    arr[i-1].subchapters.pushall(temp);
+                    temp = [];                    
+                } catch(ex){
+                    console.log(ex);
+                }
+
+//                newarr.push(arr[i-1])
+            }
+        }
+    }
+}
+var nest_chapters4 = function(table){
+    var newtable = [] ;
+    var h1 = [];
+
+    table.forEach(function( item , index){
+        item.subchapters = [];
+        if(item.type == 'h1'){
+            console.log("Looking at h1")
+            if(h1.length > 0 ){
+                h1 = process(h1);
+                    newtable.push(h1)
+            
+                //console.log(h1);
+                h1 = [];
+            }
+            h1.push(item);
+        } else {
+            h1.push(item);
+        }
+
+        // if(item.type == 'h3'){
+        //     console.log("Looking at h3")
+        //     //if prev item == h4 , look for prev
+        //     if(h1[h1.length-1].type=='h1'){
+        //         h1[h1.length-1].subchapters.push(item);
+        //         console.log("pushed : " + item.title);
+        //     }
+        // }
+
+        // if(item.type == 'h4'){
+        //     console.log("Looking at h4")
+        //     //if prev item == h4 , look for prev
+        //           if(h1[h1.length-1].type=='h3'){
+        //         h1[h1.length-1].subchapters.push(item);
+        //              console.log("pushed : " + item.title);
+        //     }
+        //         if(h1[h1.length-1].type=='h1'){
+        //         h1[h1.length-1].subchapters.push(item);
+        //          console.log("pushed : " + item.title);
+        //     }
+        // }
+
+        // if(item.type == 'h5'){
+        //     console.log("Looking at h5")
+        //     console.log(h1[h1.length-1])
+        //     //if prev item == h4 , append
+        //     if(h1[h1.length-1].type=='h4'){
+        //         h1[h1.length-1].subchapters.push(item);
+        //            console.log("pushed : " + item.title);
+        //     }
+        //     if(h1[length-1].type=='h3'){
+        //         h1[h1.length-1].subchapters.push(item);
+        //            console.log("pushed : " + item.title);
+        //     }
+        //     if(h1[h1.length-1].type=='h1'){
+        //         h1[h1.length-1].subchapters.push(item);
+        //            console.log("pushed : " + item.title);
+        //     }
+        // }
+
+    })
+// newtable.forEach(function(item){
+//     item.forEach(function(el){
+//         console.log(el);
+//     })
+// })
+    return newtable;
+}
+module.exports.nest_chapters4 = nest_chapters4;
+
+var nest_chapters3 = function (table){
+    var h1 = [];
+    table.forEach(function(item , index){
+        if(item.type == 'h1'){
+
+            var h1s = look_until('h1' , table , index , h1);
+            if(h1s){
+                console.log("Found h1s")
+                for(var i = h1s.length-1; i >= 0; i--){
+                    
+                    if(h1s[i].type == "h5"){
+                        var h5 = [];
+                        var count = 1;
+                        h5.push(h1s[i]);
+                        console.log("Found an h5");
+                        
+                        function lookin( h5 , counter , h1s,  i){
+                            if(h1s[i - counter].type == 'h5'){
+                                h5.push(h1s[i - counter]);
+                                count += 1;
+                                lookin(h5 , count , h1s , i );
+                            } 
+                            if( h1s[i-counter].type == 'h4' ){
+                                h1s[i-counter].subchapters = h5;
+                                count += 1;
+                                console.log('appended' + h5.length + "to" + h1s[i-counter].title );
+                                h5 = [];
+                            }
+
+                            if( h1s[i-counter].type == 'h3'){
+                                console.log("end of the night");
+                                h1s[i-counter].subchapters = h5;
+                                count += 1;
+                                console.log( h1s[i-counter].subchapters);
+                                h5 = [];
+                            }
+                              lookin(h5 , count , h1s , i );
+                        i-= count;
+                        h5 = [];
+                        }
+
+ 
+                    }
+                }
+            }
+        }
+    })
+}
+module.exports.nest_chapters3 = nest_chapters3;
+
 var nest_chapters = function (table){
 
 	var newtable = [];
@@ -307,6 +662,9 @@ var nest_chapters = function (table){
 	var h3arr = [];
 	var h4temp = [];
 	var lasth3 = [];
+	var h5temp = [];
+	var lasth4 = [];
+	var h4arr = [];
 
 	table.forEach(function(item , index){
 		if(index == table.length-1){
@@ -316,20 +674,19 @@ var nest_chapters = function (table){
 
     	table.forEach(function(entry , index){
 
-    		if(entry.title == lastname[lastname.length-1] || entry.title == lasth3){
+    		if(entry.title == lastname[lastname.length-1] || entry.title == lasth3[lasth3.length-1]){
     			try{
 
-    				if(h4temp.length == 0 && h3arr.length == 0){
+    				if(h4arr.length == 0 && h3arr.length == 0){
     					newtable.push(entry)
     				}
-    				if(h4temp.length > 0 && h3arr.length == 0 ){ 
-    					entry.subchapters = h4temp;
-    					h4temp = [];
+    				if(h4arr.length > 0 && h3arr.length == 0 ){ 
+    					entry.subchapters = h4arr;
+    					h4arr= [];
     					newtable.push(entry);
     				}
 
     				if(h3arr[0] !== undefined ){
-                        //console.log(h3arr);
                         entry.subchapters = h3arr;
                         h3arr = [];
                         newtable.push(entry);
@@ -345,29 +702,69 @@ var nest_chapters = function (table){
     	lastname.push(item.title);
     }
     if(item.type == 'h3'){
+
     	table.forEach(function(ent){
     		if(ent.title == lasth3[lasth3.length -1]){
+
     			try{
-    				ent.subchapters = h4temp;
-    				h3arr.push(ent)
+    				if(h5temp.length == 0 && h4arr.length == 0){
+    					console.log('no h4 or h5')
+    					h3arr.push(ent);
+    				}
+    				if(h5temp.length > 0 && h4arr.length == 0){
+    						console.log("found h5s and no h4")
+    					ent.subchapters = h5temp;
+    					h5temp =[];
+    					h3arr.push(ent);
+    				}
+    				if(h4arr.length > 0 ) {
+    					console.log('found h4')
+    					ent.subchapters = h4arr;
+    					h4arr = [];
+    					h3arr.push(ent);
+    				}
+		
     			} catch(ex){
     				console.log(ex);
     			}
     		}
-
     		item.subchapters = [];
-    		h4temp =[];
     		lasth3.push(item.title);
     	})
     }
+    if(item.type == 'h4' ){
+
+    	table.forEach(function(entr){
+    		if(entr.title == lasth4[lasth4.length-1] ){
+    			try{
+    				if(h5temp.length == 0 && h4arr.length == 0){
+    					h4arr.push(entr);
+    				}
+    				if(h5temp.length > 0 && h4arr.length == 0 ){
+    				entr.subchapters = h5temp;
+    				h5temp = [];
+    				h4arr.push(entr)
+    				}
+    				if(h4arr.length > 0 ){
+    					entr.subchapters = h5temp;
+    					h5temp = [];
+    					h4arr.push(entr);
+    				}
+
+    			} catch (ex){
+    				console.log(ex);
+    			}
+    			
+    		}
+    		item.subchapters =[];
+    		lasth4.push(item.title);
+
+    	})
+    }   
 
     if(item.type == 'h5' ){
-    	console.log("found h5");
-    	h4temp.push(item);
-    	console.log(h4temp);
-    }   
-    if(item.type == 'h4' ){
-    	h4temp.push(item);
+    	console.log(item.title);
+    	h5temp.push(item);
     }   
 
 })

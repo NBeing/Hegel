@@ -1,216 +1,180 @@
-app.controller('TocController' , function ($scope , tocFactory , naturalFactory){
+app.controller('TocController' , function ($scope , findlayFactory, tocFactory , naturalFactory){
 
 	function init(){
-
-		var firstchapter = 'PREFACE\nOn scientific knowledge';		
+		var state = new tocFactory.State();		
 		$scope.getToc = tocFactory.getToc;
 		$scope.getInd = naturalFactory.getInd;
-		var state = {};
-		state.cursor = 1;
-		state.chapter = firstchapter;
+		$scope.findchapter = tocFactory.findchapter;
+		$scope.show = tocFactory.show;
+		$scope.increment = tocFactory.increment;
+		$scope.decrement = tocFactory.decrement;
+		$scope.getit = tocFactory.getit;
+		$scope.find_section = tocFactory.find_section;
+		$scope.getIndFindlay = findlayFactory.getIndFindlay;
+		$scope.sectionIndex;
+		$scope.getInd(1)
+		.then(function(data){
+			console.log(data);
+			$scope.sectiontext = data.data;
+		});
+		$scope.getIndFindlay(1).then(function(data){
+			$scope.findlaytext = data.data;
+		})
+		$scope.find_chapter_boundaries = function find_chapter_boundaries( title ){
+			var boundaries = {}
+			var upper;
+			var lower;
 
-		$scope.changechapter = function( the_state , delta){
-			state.chapter = $scope.findchapter($scope.toc.data , the_state.cursor + delta);
-			state.bounds = $scope.find_chapter_boundaries(state.chapter);
-			$('section.chapter').hide();
-			$scope.show(the_state , state.chapter)
+			$scope.toc.data.forEach(function(chapter){
 
-		}
-		$scope.show = function(the_state , title ){
-			console.log("looking for : " + title)
-			var chap_title = $('span.chapter.title');
-			chap_title.each(function(){
-				if($(this).text() == title){
-					$(this).parent().parent().show(500);
+				if(chapter.title == title){
+					console.log("Working on : " + chapter.title);
+					
+					//Lower
+					if(chapter.subsections.length > 0){
+						console.log("subsections exist ... ")
+						lower = chapter.subsections[0];
+						console.log("Found lower : " + lower)
+					}
+					if (chapter.subsections.length == 0){
+						console.log("no subsections");
+						lower = chapter.subchapters[0].subsections[0];
+						console.log('Found lower : ' + lower)
+					}
+
+					//Upper
+					if(chapter.subchapters.length == 0){
+						console.log("no subchapters")
+						upper = chapter.subsections[chapter.subsections.length-1];
+						console.log("found upper: " + upper)
+					} else {
+						console.log("Found subchapters ")
+						upper = chapter.subchapters[chapter.subchapters.length-1]
+						upper = upper.subsections[upper.subsections.length-1];
+						console.log("found upper: " +  upper)
+					}
 				}
 			})
+			boundaries.lower = lower;
+			boundaries.upper = upper;
+
+			return boundaries;
 		}
-		$scope.findchapter = function (toc , number){
-			var result;
-			console.log("finding : " + number)
-			toc.forEach(function(chapter){				
-
-				if(chapter.subsections.length >  0 ){  //if it has subsections
-					console.log('has subsections ... ')
-
-					chapter.subsections.forEach(function(subsection){ 
-						console.log(subsection)
-						if(subsection == number){ 
-							result = chapter.title;
-						}
-					})
-				}
-				if(chapter.subchapters.length > 0){ //if it has subchapters
-					console.log('has subchapters... ')
-					chapter.subchapters.forEach(function(subsub){
-						console.log(subsub.title);
-						subsub.subsections.forEach(function(subsects){
-							console.log(subsects);
-							if(subsects == number){
-								result = chapter.title;
-							}
-						})
-					})
-				}
-
-		})
-		return result;
-	}
-		$scope.increment = function( the_state ){
-			if (the_state.cursor + 1 > the_state.bounds.upper){
-					console.log('changed section');
-					//go to the next section
-					//first find next chapter
-					$scope.changechapter(the_state , 1 );
-					state.cursor = state.cursor + 1;
-					
-			} else {
-				state.cursor = state.cursor + 1; 
-			}
+		$scope.changechapter = function( the_state , delta ){
+			the_state.chapter = $scope.findchapter($scope.toc.data , the_state.cursor + delta);
+			the_state.bounds = $scope.find_chapter_boundaries(the_state.chapter);
+			$('section.part').hide();
+			$scope.show(the_state , the_state.chapter)
+			
 		}
-
-		$scope.decrement = function( the_state ){
-
-			if (the_state.cursor - 1 < the_state.bounds.lower){
-				if(the_state.cursor - 1 <= 0 ){
-				
-			}else{
-					console.log('changed section');
-					//go to the next section
-					//first find next chapter
-					$scope.changechapter(the_state , -1 );
-					state.cursor = state.cursor-1;
-				}
-			} else {
-				state.cursor = state.cursor - 1; 
-			}
-		}
-
-		$scope.getit = function(num){
-        	
-        	$scope.getInd(num).success(function(data){
-            	return data;
-        	})
-	        
-	        .then(function(data){
-    	        $scope.ind = data.data[0];
-        	    console.log($scope.ind);
-	      	})
-    	
-    	}
-
 
 		$scope.loadControls = function(){  //Load in UI
 			
 			$(document).bind('keydown', function (e) { 
-		
-				var sections  = $('li.toc');
+
+				var sections  = $('li.section');
+				if(event.which == 84){
+					$('#text').toggleClass('full');
+					$('#back').toggle()
+				}
+
+				//BS text navigation
+				if(event.which == 50){
+					var cur;
+					cur  = $('span.word.current-word').first();
+					var next = cur.next();
+					var last_word = $('span.word.current-word').parent().find('span.word').last();
+					console.log(last_word.text());
+					var next_p = $('span.word.current-word').parent().next().find('span.word').first();
+					console.log(next_p.text());
+					if ( cur.is(last_word)){
+						$('span.word.current-word').removeClass('current-word');
+						next_p.addClass('current-word');
+					} else {
+						$('span.word.current-word').removeClass('current-word');
+						next.addClass('current-word');
+						$('#sectiontext').scrollTo(next);							
+					}
+				}
+				if(event.which == 49){
+				var cur  = $('span.word.current-word').first();
+				
+				var first_word = $('#sectiontext > li').first().find('span.word').first();
+
+					var prev = cur.prev();
+					if(first_word.is(prev)){
+						console.log("it is!")
+					} else {
+						$('span.word.current-word').removeClass('current-word');
+						prev.addClass('current-word');
+						$('#sectiontext').scrollTo(prev);	
+					}
+
+				}
 
 				if(event.which == 39){
+					var cur  = $('li.section.focus');
 					
-					var cur  = $('li.toc.focus');
+					$scope.increment(state , $scope)
+					$scope.find_section(state.cursor , sections);
+
+					var prev_heading = cur.parent().prev()
+					$('#back').scrollTo(prev_heading);	
+				}
+				if(event.which == 13){
+					console.log("fired enter");
+					console.log("cursor at" + state.cursor);
+					$scope.getInd(state.cursor)
+					.then(function(data){
+						console.log(data);
+						$scope.sectiontext = data.data;
+					});
+					$scope.getIndFindlay(state.cursor)
+					.then(function(data){
+						$scope.findlaytext = data.data;
+						$('#sectiontext > li').find('span.word').first().next().addClass('current-word')
+					})
+					
+				}
+				if(event.which == 86){
+					$('#findlaytext').toggle();
+				}
+
+				if(event.which == 37){
+					var cur  = $('li.section.focus');
 					console.log(cur.text());
-					
 					function find_section(count){
 						console.log("count is : " + count)
 						sections.each(function(index){
 							$(this).removeClass('focus');
 
-							if( $(this).text() == count){
-								$(this).addClass('focus');
-							}
-						})						
-					}
-					$scope.increment(state)
-					find_section(state.cursor);
-
-				}
-				if(event.which == 13){
-					console.log("fired enter");
-					console.log("cursor at" + state.cursor);
-						$scope.getInd(state.cursor)
-						.then(function(data){
-							console.log(data);
-							$scope.sectiontext = data.data;
-						});
-				}
-
-				if(event.which == 37){
-					var cur  = $('li.toc.focus');
-					console.log(cur.text());
-					function find_section(count){
-						console.log("count is : " + count)
-						sections.each(function(index){
-						$(this).removeClass('focus');
-
-							if( $(this).text() == count){
+							if( $(this).text().trim() == count){
 								console.log($(this).text());
 								$(this).addClass('focus');
 							}
 						})
 					}
-					$scope.decrement(state)
-					find_section(state.cursor);
+					$scope.decrement(state , $scope)
+					$scope.find_section(state.cursor , sections);
+
+					var prev_heading = cur.parent().prev()
+					$('#back').scrollTo(prev_heading);	
 				}
 			})
-		}
-
-		$scope.getToc().then(function(data){
-			$scope.toc = data;
-			
-			return data;
-		}).then(function(data){
-			setTimeout(function(){
-         $('li.toc').first().addClass('focus');
-         	$scope.show(state , firstchapter)
-        }
-    , 3500);
-			$scope.loadControls();
-	
-	$scope.find_chapter_boundaries = function( title ){
-		var boundaries = {}
-		var upper;
-		var lower;
-
-		$scope.toc.data.forEach(function(chapter){
-
-			if(chapter.title == title){
-				console.log("Working on : " + chapter.title);
-				
-				//Lower
-				if(chapter.subsections.length > 0){
-					console.log("subsections exist ... ")
-					lower = chapter.subsections[0];
-					console.log("Found lower : " + lower)
-				}
-				if (chapter.subsections.length == 0){
-					console.log("no subsections");
-					lower = chapter.subchapters[0].subsections[0];
-					console.log('Found lower : ' + lower)
-				}
-
-				//Upper
-				if(chapter.subchapters.length == 0){
-					console.log("no subchapters")
-					upper = chapter.subsections[chapter.subsections.length-1];
-					console.log("found upper: " + upper)
-				} else {
-					console.log("Found subchapters ")
-					upper = chapter.subchapters[chapter.subchapters.length-1]
-					upper = upper.subsections[upper.subsections.length-1];
-					console.log("found upper: " +  upper)
-				}
-			}
-		})
-		boundaries.lower = lower;
-		boundaries.upper = upper;
-		
-		return boundaries;
 	}
-	$scope.changechapter(state ,  0);
 
-	
-		})
+$scope.getToc().then(function(data){
+	$scope.toc = data;
+	return data;
+}).then(function(data){
+	setTimeout(function(){
+		$('li.section').first().addClass('focus');
+		$scope.show(state , state.chapter)
+		$scope.loadControls();
+		$scope.changechapter(state ,  0);
 	}
-		init();
-	})
+	, 500);
+})
+	}
+	init();
+})

@@ -119,15 +119,49 @@ router.route('/hegels/:id')
         var words = [];
         words[0] = [];
         
+        try{
+            
         hegel.hegel.text.forEach(function(one){
             words[0].push(one);
         })
-
+        }catch(ex){
+            console.log(ex);
+        }
         words[0].forEach(function(one , index){
             words[index] = tokenizer.tokenize(one);
         })
 
         res.send(words);
+    })
+});
+
+router.route('/hegels/findlay/:id')  
+
+.get(function(req, res) {
+
+    var id = Number(req.params.id);
+    console.log("Getting: " +id);
+
+    Hegel.findOne({'number':id}, function(err, hegel ){
+        if(err){
+            console.log(err);
+        }
+        var words = [];
+        words[0] = [];
+       
+        try{
+             hegel.findlay.text.forEach(function(one){
+            words[0].push(one);
+        })
+        }catch(ex){
+            console.log(ex);
+            res.send('');
+        }
+        words[0].forEach(function(one , index){
+            words[index] = tokenizer.tokenize(one);
+        })
+
+        res.send(words[0]);
     })
 });
 
@@ -249,13 +283,52 @@ app.get('/toc' , function(req, res){
         })
 
         var table = scraper.convert_to_obj(allofem)
- 
-        table = scraper.nest_chapters(table);
-          res.send(table);
-        table = _.uniq (table , function (item , key , title){
+
+        table = scraper.nest_chapters4(table);  
+           table = _.uniq (table , function (item , key , title){
             return item.title;
-        })
-    
+        })   
+           table = get_bounds(table);
+        function get_bounds (table){
+            var newtable = [];
+            table.forEach(function(chapter){
+                var upper;
+                var lower;
+                var boundaries;
+                //Lower
+                try{
+                    if(chapter.subsections.length > 0){
+                        console.log("subsections exist ... ")
+                        lower = chapter.subsections[0];
+                        console.log("Found lower : " + lower)
+                    }
+                    if (chapter.subsections.length == 0){
+                        console.log("no subsections");
+                        lower = chapter.subchapters[0].subsections[0];
+                        console.log('Found lower : ' + lower)
+                    }
+                    //Upper
+                    if(chapter.subchapters.length == 0){
+                        console.log("no subchapters")
+                        upper = chapter.subsections[chapter.subsections.length-1];
+                        console.log("found upper: " + upper)
+                    } else {
+                        console.log("Found subchapters ")
+                        upper = chapter.subchapters[chapter.subchapters.length-1]
+                        upper = upper.subsections[upper.subsections.length-1];
+                        console.log("found upper: " +  upper)
+                    }
+                    chapter.first_section = lower;
+                    chapter.last_section = upper;
+                    newtable.push(chapter);
+                } catch (ex) {
+                    console.log(ex)
+                }
+           })
+        return newtable;
+
+        }
+
         res.send(table);
     })
 });
