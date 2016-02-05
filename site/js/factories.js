@@ -16,7 +16,7 @@ app.factory('tocFactory' , function ($http){
 
     factory.getToc = function(){
         console.log('getting TOC');
-        return $http.get('http://localhost:3000/toc')
+        return $http.get('http://localhost:3000/api/tocget')
     }
 
     factory.State = function State( cursor , chapter ) {

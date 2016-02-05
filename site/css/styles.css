@@ -403,9 +403,21 @@ section.part{
 }
 #findlaytext{
   border: 1px solid black;
+  box-sizing: border-box;
+  height: 50%;
+  padding: 20px;
+  font-size: 1.2em;
+  font-family: 'Vollkorn', serif;
+  display: inline-block;
+  height: auto;
+  position: absolute;
+  bottom: 5;
+}
+#findlaytext.full{
+  width: 70vw;
 }
 #sectiontext {
-  height: 50vh;
+  height: 50%;
   overflow: hidden;
 }
 #sectiontext > li {
@@ -419,7 +431,23 @@ section.part{
   margin-left: 15vw;
   margin-top: 10vh;
 }
+#sectiontext.half{
+  float:right;
+  height: 100vh;
+}
+
 
 .black{
   background-color: black;
 }
+#findlayanalysis {
+  text-align: center;
+  box-sizing: border-box;
+  padding: 10px;
+  background-color: black;
+  color: white;
+  margin-bottom: 1em;
+  display: inline-block;
+
+}
+

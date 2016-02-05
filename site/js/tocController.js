@@ -76,6 +76,7 @@ app.controller('TocController' , function ($scope , findlayFactory, tocFactory ,
 				if(event.which == 84){
 					$('#text').toggleClass('full');
 					$('#back').toggle()
+					$('#findlaytext').toggleClass('full');
 				}
 
 				//BS text navigation
@@ -138,6 +139,8 @@ app.controller('TocController' , function ($scope , findlayFactory, tocFactory ,
 				}
 				if(event.which == 86){
 					$('#findlaytext').toggle();
+					$('#text').toggleClass('half');
+					$('#sectiontext').toggleClass('half');
 				}
 
 				if(event.which == 37){
@@ -173,7 +176,7 @@ $scope.getToc().then(function(data){
 		$scope.loadControls();
 		$scope.changechapter(state ,  0);
 	}
-	, 500);
+	, 0);
 })
 	}
 	init();

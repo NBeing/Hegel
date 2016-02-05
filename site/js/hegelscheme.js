@@ -16,3 +16,4 @@ var HegelSchema = new Schema({  //Change name to section schema
 
 module.exports = mongoose.model('Hegel', HegelSchema);
 
+

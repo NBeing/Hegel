@@ -44,9 +44,12 @@
 
 <div id = "text">
 <div id="sectiontext" ng-model="sectiontext"> 
+
 	<li ng-repeat="para in sectiontext"> <span class="word" ng-repeat="word in para track by $index" ng-init="sectionIndex=$index">{{word}} </span></li>
 </div>
 	<div id="findlaytext" ng-model="findlaytext" > 
+	<span id = 'findlayanalysis'> : Findlay Analysis :</span>
+	<br>
 	<span class="word" ng-repeat="words in findlaytext track by $index" >{{words}} </span></p></li>
 </div>
 </div>

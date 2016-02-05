@@ -38,6 +38,7 @@ var scraper = require('./site/js/scraper.js');
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://userx:userxpass@ds045465.mongolab.com:45465/alltest');
 var Hegel = require('./site/js/hegelscheme.js');
+var Toc = require('./site/js/TocSchema.js');
 
 //Tell us when the route is being called
 router.use(function(req, res, next) {
@@ -229,8 +230,14 @@ app.get('/findlay', function(req, res){
 
 
 //(WIP) get the number of each section within each chapter
-app.get('/toc' , function(req, res){
-
+router.route('/tocget')
+    .get(function(req , res ){ 
+        Toc.find().then(function(data){
+            res.send(data[0].table);
+        })
+    })
+router.route('/toc')
+.get(function(req, res){
     //This is the Table of Contents page for the Phenomenology
     var contents = 'https://www.marxists.org/reference/archive/hegel/works/ph/phconten.htm';
     scraper.get_toc(contents)
@@ -328,7 +335,13 @@ app.get('/toc' , function(req, res){
         return newtable;
 
         }
-
+        try{
+            var toc = new Toc({table: table});
+            console.log(toc);
+            toc.save();
+        } catch (ex){
+            console.log(ex)
+        }
         res.send(table);
     })
 });
