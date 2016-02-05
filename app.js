@@ -230,14 +230,14 @@ app.get('/findlay', function(req, res){
 
 
 //(WIP) get the number of each section within each chapter
-router.route('/tocget')
+router.route('/toc')
     .get(function(req , res ){ 
         Toc.find().then(function(data){
             res.send(data[0].table);
         })
     })
 router.route('/toc')
-.get(function(req, res){
+.post(function(req, res){
     //This is the Table of Contents page for the Phenomenology
     var contents = 'https://www.marxists.org/reference/archive/hegel/works/ph/phconten.htm';
     scraper.get_toc(contents)
