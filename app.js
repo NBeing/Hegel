@@ -236,7 +236,6 @@ router.route('/toc')
             res.send(data[0].table);
         })
     })
-router.route('/toc')
 .post(function(req, res){
     //This is the Table of Contents page for the Phenomenology
     var contents = 'https://www.marxists.org/reference/archive/hegel/works/ph/phconten.htm';
@@ -295,7 +294,7 @@ router.route('/toc')
            table = _.uniq (table , function (item , key , title){
             return item.title;
         })   
-           table = get_bounds(table);
+        table = get_bounds(table);
         function get_bounds (table){
             var newtable = [];
             table.forEach(function(chapter){
