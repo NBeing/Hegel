@@ -249,8 +249,14 @@ var get_all_tables = function(data){
 }
 module.exports.get_all_tables = get_all_tables;
 
+var Chapter = function(type , title , subsections){
+    this.type = type;
+    this.title = title;
+    this.subsections = subsections;
+}
+module.exports.Chapter = Chapter;
 
-var convert_to_obj = function ( allofem ){
+var convert_to_obj = function ( allofem , Chapter){
     var table = [];
     var temp = [];
     var previousname;
@@ -278,22 +284,19 @@ var convert_to_obj = function ( allofem ){
                 } catch(ex){
                     console.log(ex);
                 }
-                var table_element = {};
+                var table_element = new Chapter();
                 table_element.type = item[0];
                 table_element.title = item[1];
                 previousname = item[1];
             
             } else {
                 temp.push(item);
-                //Write a function that looks ahead or behind
             }
             
             if(table_element){
                 table.push(table_element);
             }
-
         })
-     
     }) 
     return(table);   
 }

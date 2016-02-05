@@ -286,9 +286,11 @@ router.route('/toc')
             catch(ex){ console.log(ex); }
 
             allofem.push( scraper.parse_without_tests($))
-        })
 
-        var table = scraper.convert_to_obj(allofem)
+            //Now data looks like this
+        })
+         var Chapter = scraper.Chapter;
+        var table = scraper.convert_to_obj(allofem , Chapter)
 
         table = scraper.nest_chapters4(table);  
            table = _.uniq (table , function (item , key , title){
@@ -336,7 +338,6 @@ router.route('/toc')
         }
         try{
             var toc = new Toc({table: table});
-            console.log(toc);
             toc.save();
         } catch (ex){
             console.log(ex)
