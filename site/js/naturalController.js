@@ -69,21 +69,7 @@ app.controller('NaturalController' , [ '$scope', '$sce' , 'naturalFactory','engl
         });
 }
 
-
-    $scope.hi = function(){
-
-        var span = $('span');
-
-        span.click(function(){
-            togglefocus($(this));
-        })
-    
-    setTimeout(function(){
-         $('div.ind_section > p > span').first().addClass('focus');
-        }
-    , 500);
-
-    function togglefocus(el){
+   function togglefocus(el){
             var focus = el;
             if(focus.hasClass('focus')){
                 focus.removeClass('focus')
@@ -92,7 +78,7 @@ app.controller('NaturalController' , [ '$scope', '$sce' , 'naturalFactory','engl
                 focus.addClass('focus');
             }
         }
-    }
+ 
 
     $scope.wikis = function(){
             var focus = $('.focus');
@@ -115,10 +101,6 @@ app.controller('NaturalController' , [ '$scope', '$sce' , 'naturalFactory','engl
             return data;
         }).then(function(data){
             $scope.ind = data.data[0];
-            $scope.$watch('ind', function(newval ,oldval){
-                $scope.hi();
-            })
-
       })
     }
 
@@ -153,12 +135,11 @@ app.controller('NaturalController' , [ '$scope', '$sce' , 'naturalFactory','engl
         $scope.getInd = naturalFactory.getInd;
         $scope.getWiki = wikiFactory.getWiki;
         $scope.getIndWord = naturalFactory.getIndWord;
-        $scope.wordy = "Ball";
+        $scope.wordy = "Philosophy";
         $scope.getit($scope.section);
         $scope.wordget($scope.wordy);
         $scope.loadControls();
         $scope.wiki($scope.initial_word);
-        $scope.hi();
 
         $scope.getScraper = scrapeFactory.getScraper;
         $scope.getScraper().success(function(data){
@@ -168,6 +149,8 @@ app.controller('NaturalController' , [ '$scope', '$sce' , 'naturalFactory','engl
             $scope.finds = data;
         }).then(function(){
             $scope.getIndFind($scope.finds, $scope.section);
+        }).then(function(){
+            $('div.ind_section > p > span').first().addClass('focus');
         })
 
     }

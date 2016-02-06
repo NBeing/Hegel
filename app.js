@@ -79,18 +79,18 @@ router.route('/hegels')  //Post or get the data to the mongodb database
             })
             .then(function(data){
 
-                var hegeldata = eng.fixdata(data);
-                hegeldata = eng.fixid(hegeldata);
-                
-                var findlaydata = alldata[0];
-                findlaydata = eng.fixdata(findlaydata);
+            var hegeldata = eng.fixdata(data);
+            hegeldata = eng.fixid(hegeldata);
+            
+            var findlaydata = alldata[0];
+            findlaydata = eng.fixdata(findlaydata);
 
-                var many = eng.getmanypair(hegeldata, findlaydata, 1, 800);
+            var many = eng.getmanypair(hegeldata, findlaydata, 1, 800);
 
-                 var secs = eng.make_many_sections(many);
-                eng.save_many(secs);
-               
-                res.send(secs);
+            var secs = eng.make_many_sections(many);
+            eng.save_many(secs);
+           
+            res.send(secs);
             });
 })
 
@@ -109,7 +109,7 @@ router.route('/hegels/:id')
 .get(function(req, res) {
 
     var id = Number(req.params.id);
-    console.log("Getting: " +id);
+    console.log("Getting: " + id);
 
     Hegel.findOne({'number':id}, function(err, hegel ){
         if(err){
@@ -139,7 +139,7 @@ router.route('/hegels/findlay/:id')
 .get(function(req, res) {
 
     var id = Number(req.params.id);
-    console.log("Getting: " +id);
+    console.log("Getting: " + id);
 
     Hegel.findOne({'number':id}, function(err, hegel ){
         if(err){
@@ -212,7 +212,7 @@ app.get('/findlay', function(req, res){
     })
 })
 
-//(WIP) get the number of each section within each chapter
+//Table of contents -- the post route is the scraper
 router.route('/toc')
     .get(function(req , res ){ 
         Toc.find().then(function(data){

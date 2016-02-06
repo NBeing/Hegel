@@ -36,7 +36,7 @@ I've also begun the algorithm for scraping the German text, however this has not
 
 Generates a table of contents using a custom algorithm //
 Makes the table of contents into a large object which is then used to populate an angular template.
-( explore the page  : http://localhost:3000/toc if you would like to look at this object ) 
+( explore the page  : http://localhost:3000/api/toc if you would like to look at this object ) 
 
 (Natural route only:: Make a simple UI for browsing the sections. 
 

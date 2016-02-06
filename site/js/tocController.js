@@ -2,12 +2,12 @@ app.controller('TocController' , function ($scope , findlayFactory, tocFactory ,
 
 	function init(){
 		var state = new tocFactory.State();		
-		$scope.getToc = tocFactory.getToc;
-		$scope.getInd = naturalFactory.getInd;
-		$scope.findchapter = tocFactory.findchapter;
-		$scope.show = tocFactory.show;
-		$scope.increment = tocFactory.increment;
-		$scope.decrement = tocFactory.decrement;
+		$scope.getToc = tocFactory.getToc; //Fetch the TOC
+		$scope.getInd = naturalFactory.getInd; //Get an individual section
+		$scope.findchapter = tocFactory.findchapter; //Function to find a chapter
+		$scope.show = tocFactory.show; //Show the chapter
+		$scope.increment = tocFactory.increment; //Increment section
+		$scope.decrement = tocFactory.decrement; //Decrement section
 		$scope.getit = tocFactory.getit;
 		$scope.find_section = tocFactory.find_section;
 		$scope.getIndFindlay = findlayFactory.getIndFindlay;
@@ -20,6 +20,9 @@ app.controller('TocController' , function ($scope , findlayFactory, tocFactory ,
 		$scope.getIndFindlay(1).then(function(data){
 			$scope.findlaytext = data.data;
 		})
+
+		//In the process of refactoring this out where object is created (scraper.js)
+		//This should actually be a method on each chapter
 		$scope.find_chapter_boundaries = function find_chapter_boundaries( title ){
 			var boundaries = {}
 			var upper;

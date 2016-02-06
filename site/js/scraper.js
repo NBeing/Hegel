@@ -534,9 +534,6 @@ function unshiftall ( dest ){
     }
 }
 
-
-
-
 function process( arr ){
     var newarr = [];
     temp = [];
@@ -581,8 +578,6 @@ function process( arr ){
                 } catch(ex){
                     console.log(ex);
                 }
-
-//                newarr.push(arr[i-1])
             }
         }
     }
