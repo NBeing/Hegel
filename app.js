@@ -104,8 +104,6 @@ router.route('/hegels')  //Post or get the data to the mongodb database
 });
 
 //Find a single ID in the mongodb database
-
-//Really need to figure out where the extra container is being added.
 router.route('/hegels/:id')  
 
 .get(function(req, res) {
@@ -194,11 +192,6 @@ router.route('/wiki/:query')
     })
 });
 
-//These three routes scrape of the section text (German, Findlay , English)
-    //  1) Need to make a scraper that starts from the TOC and then populates these
-    //  2) Figure out a way to get the headings
-    //  3) Next you need to put these all into MongoDB
-
 app.get('/german', function(req, res){
     german.get_german('https://www.marxists.org/deutsch/philosophie/hegel/phaenom/kap1.htm#p90')
     .then(function(data){
@@ -219,16 +212,6 @@ app.get('/findlay', function(req, res){
     })
 })
 
-//Pretty sure you can delete this route
-// app.get('/english' , function(req, res){
-//     eng.getit('https://www.marxists.org/reference/archive/hegel/works/ph/phaa.htm').
-//         then(function(data){
-//             var data = eng.get_data(data);
-//             res.send(data);
-//         });
-// });
-
-
 //(WIP) get the number of each section within each chapter
 router.route('/toc')
     .get(function(req , res ){ 
@@ -242,11 +225,10 @@ router.route('/toc')
     scraper.get_toc(contents)
 
     .then(function(data){
-        return scraper.get_links(data);
+        return scraper.get_links(data); //Get all of the links contained
     })
-
     .then(function(data){
-        //Remove Duplicates from all;
+        //Remove duplicate links from all of the toc links (There are many!);
         var all_no_dupes = scraper.remove_duplicates(data);
        
         // parse out the links which have links to id's 
@@ -277,71 +259,24 @@ router.route('/toc')
 
     .then(function(data){
 
-        var toc = [];
-        var allofem = [];
-
-        data.forEach(function(body , index){
-            //Load the body
-            try{ var $ = cheerio.load(body); } 
-            catch(ex){ console.log(ex); }
-
-            allofem.push( scraper.parse_without_tests($))
-
-            //Now data looks like this
-        })
-         var Chapter = scraper.Chapter;
-        var table = scraper.convert_to_obj(allofem , Chapter)
-
-        table = scraper.nest_chapters4(table);  
-           table = _.uniq (table , function (item , key , title){
+        var allofem = scraper.getallofem(data); // make an array of headings from each page
+        var Chapter = scraper.Chapter; // refer to the chapter prototype
+        var table = scraper.convert_to_obj(allofem , Chapter) //convert the scraped array to an object
+        table = scraper.nest_chapters(table); //Nest subchapters in chapters
+        
+        //Get only unique elements in the table with underscore.
+        table = _.uniq (table , function (item , key , title){
             return item.title;
         })   
-        table = get_bounds(table);
-        function get_bounds (table){
-            var newtable = [];
-            table.forEach(function(chapter){
-                var upper;
-                var lower;
-                var boundaries;
-                //Lower
-                try{
-                    if(chapter.subsections.length > 0){
-                        console.log("subsections exist ... ")
-                        lower = chapter.subsections[0];
-                        console.log("Found lower : " + lower)
-                    }
-                    if (chapter.subsections.length == 0){
-                        console.log("no subsections");
-                        lower = chapter.subchapters[0].subsections[0];
-                        console.log('Found lower : ' + lower)
-                    }
-                    //Upper
-                    if(chapter.subchapters.length == 0){
-                        console.log("no subchapters")
-                        upper = chapter.subsections[chapter.subsections.length-1];
-                        console.log("found upper: " + upper)
-                    } else {
-                        console.log("Found subchapters ")
-                        upper = chapter.subchapters[chapter.subchapters.length-1]
-                        upper = upper.subsections[upper.subsections.length-1];
-                        console.log("found upper: " +  upper)
-                    }
-                    chapter.first_section = lower;
-                    chapter.last_section = upper;
-                    newtable.push(chapter);
-                } catch (ex) {
-                    console.log(ex)
-                }
-           })
-        return newtable;
-
-        }
-        try{
+        
+        //Set the bounds of each chapter to be the highest/lowest sections
+        table = scraper.set_bounds(table);
+        
+        try{  //Try saving to the mongodb
             var toc = new Toc({table: table});
             toc.save();
-        } catch (ex){
-            console.log(ex)
-        }
+        } catch (ex){console.log(ex)}
+        
         res.send(table);
     })
 });

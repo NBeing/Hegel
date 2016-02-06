@@ -362,7 +362,60 @@ var checkForChapter = function(chapter,  title){
         }
 }
 module.exports.checkForChapter = checkForChapter;
+var getallofem = function getallofem(bodies){
+            var toc = [];
+            var allofem = [];
 
+            bodies.forEach(function(body , index){
+            //Load the body
+            try{ var $ = cheerio.load(body); } 
+            catch(ex){ console.log(ex); }
+
+            allofem.push( parse_without_tests($))
+            //Now data looks like this
+            })
+            return allofem;
+        }
+module.exports.getallofem = getallofem;
+function set_bounds (table){
+    var newtable = [];
+    table.forEach(function(chapter){
+        var upper;
+        var lower;
+        var boundaries;
+        //Lower
+        try{
+            if(chapter.subsections.length > 0){
+                console.log("subsections exist ... ")
+                lower = chapter.subsections[0];
+                console.log("Found lower : " + lower)
+            }
+            if (chapter.subsections.length == 0){
+                console.log("no subsections");
+                lower = chapter.subchapters[0].subsections[0];
+                console.log('Found lower : ' + lower)
+            }
+            //Upper
+            if(chapter.subchapters.length == 0){
+                console.log("no subchapters")
+                upper = chapter.subsections[chapter.subsections.length-1];
+                console.log("found upper: " + upper)
+            } else {
+                console.log("Found subchapters ")
+                upper = chapter.subchapters[chapter.subchapters.length-1]
+                upper = upper.subsections[upper.subsections.length-1];
+                console.log("found upper: " +  upper)
+            }
+            chapter.first_section = lower;
+            chapter.last_section = upper;
+            newtable.push(chapter);
+        } catch (ex) {
+            console.log(ex)
+        }
+    })
+return newtable;
+}
+module.exports.set_bounds = set_bounds;
 var lookForChapter = function(table , title ){
     
     table.forEach(function(chapter){
@@ -454,6 +507,10 @@ var nest_chapters2 = function (table){
     return newtable;
 }
 module.exports.nest_chapters2 = nest_chapters2;
+
+
+Array.prototype.unshiftall = unshiftall;
+Array.prototype.pushall = pushall;
 function pushall ( dest ){
     var self = this;
     if(Array.isArray(self) && Array.isArray(dest)){
@@ -465,7 +522,6 @@ function pushall ( dest ){
         console.log("Not an array!");
     }
 }
-
 function unshiftall ( dest ){
     var self = this;
     if(Array.isArray(self) && isArray(dest)){
@@ -479,12 +535,6 @@ function unshiftall ( dest ){
 }
 
 
-var oldarray = ['a','b','c'];
-var newarray = ['d','e','f'];
-Array.prototype.unshiftall = unshiftall;
-Array.prototype.pushall = pushall;
-oldarray.pushall(newarray);
-console.log(oldarray);
 
 
 function process( arr ){
@@ -537,7 +587,7 @@ function process( arr ){
         }
     }
 }
-var nest_chapters4 = function(table){
+var nest_chapters = function(table){
     var newtable = [] ;
     var h1 = [];
 
@@ -556,56 +606,10 @@ var nest_chapters4 = function(table){
         } else {
             h1.push(item);
         }
-
-        // if(item.type == 'h3'){
-        //     console.log("Looking at h3")
-        //     //if prev item == h4 , look for prev
-        //     if(h1[h1.length-1].type=='h1'){
-        //         h1[h1.length-1].subchapters.push(item);
-        //         console.log("pushed : " + item.title);
-        //     }
-        // }
-
-        // if(item.type == 'h4'){
-        //     console.log("Looking at h4")
-        //     //if prev item == h4 , look for prev
-        //           if(h1[h1.length-1].type=='h3'){
-        //         h1[h1.length-1].subchapters.push(item);
-        //              console.log("pushed : " + item.title);
-        //     }
-        //         if(h1[h1.length-1].type=='h1'){
-        //         h1[h1.length-1].subchapters.push(item);
-        //          console.log("pushed : " + item.title);
-        //     }
-        // }
-
-        // if(item.type == 'h5'){
-        //     console.log("Looking at h5")
-        //     console.log(h1[h1.length-1])
-        //     //if prev item == h4 , append
-        //     if(h1[h1.length-1].type=='h4'){
-        //         h1[h1.length-1].subchapters.push(item);
-        //            console.log("pushed : " + item.title);
-        //     }
-        //     if(h1[length-1].type=='h3'){
-        //         h1[h1.length-1].subchapters.push(item);
-        //            console.log("pushed : " + item.title);
-        //     }
-        //     if(h1[h1.length-1].type=='h1'){
-        //         h1[h1.length-1].subchapters.push(item);
-        //            console.log("pushed : " + item.title);
-        //     }
-        // }
-
     })
-// newtable.forEach(function(item){
-//     item.forEach(function(el){
-//         console.log(el);
-//     })
-// })
     return newtable;
 }
-module.exports.nest_chapters4 = nest_chapters4;
+module.exports.nest_chapters = nest_chapters;
 
 var nest_chapters3 = function (table){
     var h1 = [];
@@ -657,7 +661,7 @@ var nest_chapters3 = function (table){
 }
 module.exports.nest_chapters3 = nest_chapters3;
 
-var nest_chapters = function (table){
+var nest_chaptersold = function (table){
 
 	var newtable = [];
 	var temparr = [];
@@ -773,7 +777,8 @@ var nest_chapters = function (table){
 })
 return newtable;
 }
-module.exports.nest_chapters = nest_chapters;
+module.exports.nest_chaptersold = nest_chaptersold;
+
 var parse_without_tests = function ($){
 	var table = [];
 	console.log("");
