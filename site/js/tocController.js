@@ -68,6 +68,7 @@ app.controller('TocController' , function ($scope , findlayFactory, tocFactory ,
 			the_state.bounds = $scope.find_chapter_boundaries(the_state.chapter);
 			$('section.part').hide();
 			$scope.show(the_state , the_state.chapter)
+
 			
 		}
 
@@ -124,6 +125,8 @@ app.controller('TocController' , function ($scope , findlayFactory, tocFactory ,
 					var prev_heading = cur.parent().prev()
 					$('#back').scrollTo(prev_heading);	
 				}
+
+				
 				if(event.which == 13){
 					console.log("fired enter");
 					console.log("cursor at" + state.cursor);
