@@ -1,5 +1,4 @@
-<h2> Hegel's Phenomenology of Spirit </h2>
-<h2> Section: {{section}}</h2>
+<span class="natural section number">{{section}}</span>
 <span class="helpblurb"> Press 'h' for help</span>
 <span class="todoblurb"> Press 't' for To Do</span>
 
@@ -8,11 +7,10 @@
     <span ng-repeat="item in ind track by $index">{{item}} </span>
   </p>
 
-<div style="clear:left;" ng-bind-html="wword"></div>
+<div style="clear:left;" ng-bind-html="wword" class="wiki natural"></div>
 
 </div>
 <div class = "findlay" ng-model="find">{{find}}</div>
-
 
 <div ng-model="wordy" class = "wordies">
   <div ng-repeat="word in wordy.info track by $index">
@@ -33,8 +31,7 @@ Here's a demo. It's super buggy, but I'm working at it.
 
 <li> Press 'f' to get the Findlay Notes for this section </li>
 <li> Press 'e' to move to the next section </li>
-<li>Press 'q' to move to the previous section  
-(Throws errors if , larger than 110 or smaller than 90);</li>
+<li>Press 'q' to move to the previous section </li>
 
 <li>Press 'right arrow' to move to the next word.</li>
 <li>Press 'left arrow' ... </li>

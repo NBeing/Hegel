@@ -1,10 +1,23 @@
 
 app.controller('NaturalController' , [ '$scope', '$sce' , 'naturalFactory','englishFactory', 'wikiFactory', 'findlayFactory', 'scrapeFactory', function ($scope , $sce, naturalFactory, englishFactory , wikiFactory, findlayFactory, scrapeFactory){
-    
-    //You should split this controller into other controllers in order to make your code more modular (wikiController, findlayController, wordnetController, englishController etc).
+
+function debounce(func, wait, immediate) {
+    var timeout;
+    return function() {
+        var context = this, args = arguments;
+        var later = function() {
+            timeout = null;
+            if (!immediate) func.apply(context, args);
+        };
+        var callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+        if (callNow) func.apply(context, args);
+    };
+};
 
     $scope.loadControls = function(){  //Load in UI
-        $(document).unbind('keyup').bind('keyup', function (e) {
+        $(document).on('keydown', function (e) { 
              var span = $('span');
              
              if(event.which == 72){
@@ -52,19 +65,27 @@ app.controller('NaturalController' , [ '$scope', '$sce' , 'naturalFactory','engl
             }
 
             if(event.which == 39 ){ //right arrow
-                var cur  = $('span.focus');
+           var cur  = $('span.focus');
+           var next = cur.next();
+           if(next.is('span')){
                 span.each(function(){
                 $(this).removeClass('focus');
                 cur.next().addClass('focus');
-            })                
+            })   
+            
+           }
             }
 
              if(event.which == 37 ){ //right arrow
                 var cur  = $('span.focus');
+                var prev = cur.prev()
+
+                if(prev.is('span')){
                 span.each(function(){
-                $(this).removeClass('focus');
-                cur.prev().addClass('focus');
-            })                
+                    $(this).removeClass('focus');
+                    cur.prev().addClass('focus');
+                })
+            }
             }
         });
 }
@@ -145,7 +166,7 @@ app.controller('NaturalController' , [ '$scope', '$sce' , 'naturalFactory','engl
         $scope.getScraper().success(function(data){
             $scope.scrape = data;
         });
-        $scope.findlays().success(function(data){
+        $scope.findlays().then(function(data){
             $scope.finds = data;
         }).then(function(){
             $scope.getIndFind($scope.finds, $scope.section);

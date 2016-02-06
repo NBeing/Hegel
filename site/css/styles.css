@@ -85,11 +85,38 @@ tr {
   color: blue;
 }
 
+#nav {
+  box-sizing: border-box;
+  border-bottom: 1px solid black;
+  display: inline-block;
+  width: 100%;
+  padding: 10px;
+  background-color: grey;
+}
+h2.natural.heading{
+  display: inline-block;
+  text-align: left;
+  font-size: 2em;
+  float: left;
+  margin-top: 0.2em;
+  color: white;
+}
+h3.natural.heading{
+  font-size: 1.5em;
+  margin-top: .5em;
+}
+span.natural.section.number{
+  font-size: 3em;
+  float: left;
+  display: inline-block;
+}
+
 .ind_section{
   width: 70%;
+  max-width: 50vw;
   min-height: 700px;
   float: left;
-  margin-left: 2.5%;
+  margin-left: 15.5%;
     padding: 25px;
 
 }
@@ -122,7 +149,18 @@ right:0;
   font-family: Georgia;
   list-style-type: none;
 }
-
+.toplink {
+  display: inline-block;
+  margin-right: 2em;
+  font-size: 1.5em;
+  text-decoration: none;
+  font-weight: bolder;
+  box-sizing:border-box;
+  padding: 10px;
+  background-color: grey;
+  color: white;
+  float: right;
+}
 .section-title{
   font-size: 2em;
   font-weight: bolder;
@@ -166,33 +204,6 @@ right:0;
 #todo > ul > ol{
   margin-bottom: 1em;
 }
-.helpblurb{
-  position: fixed; 
-  bottom: 45px; 
-  left: 0px;
-  font-size: 1.5em;
-  background-color: black;
-  color: white;
-  padding-right: 5px;
-  padding-top:10px;
-  padding-bottom:10px;
-  border-bottom-right-radius:5px;
-  border-top-right-radius: 5px;
-}
-
-.todoblurb{
-  position: fixed; 
-  bottom: 120px; 
-  left: 0px;
-  font-size: 1.5em;
-  background-color: black;
-  color: white;
-  padding-right: 5px;
-  padding-top:10px;
-  padding-bottom:10px;
-  border-bottom-right-radius:5px;
-  border-top-right-radius: 5px;
-}
 
 .h1 > span {
   font-size: 1.5em;
@@ -211,6 +222,16 @@ right:0;
     font-size: 1.25em;
   margin-left:10%;
 }
+
+span.helpblurb , span.todoblurb{
+
+  float: right
+  font-size: 1.5em;
+  display: inline-block;
+  padding: 5px;
+  border: 2px solid black;
+}
+
 li.toc {
   font-size: 1.25em;
   display: inline-block;
@@ -222,9 +243,6 @@ li.toc {
   padding-top: 0.25em;
   padding-bottom: 0.25em;
   float: left;
-}
-.blue{
-  background-color: blue !important;
 }
 section.chapter{
   margin-bottom: 5vh;
@@ -274,34 +292,14 @@ li.section.focus{
     color: white;
   background-color: black;
 }
-/*div#sectiontext{
-  position: fixed;
-  bottom:0;
-  width: 80vw;
-  padding: 1em;
-  background-color: white;
-}*/
-
-/*
-span.subchapter.title {
-  font-size: 1.5em;
-  margin-bottom: 3em;
-  display: inline;
-  float: left;
-}
-
-
-div.subchapter{
-  margin-left: 5%;
-  margin-bottom: 2.5em;
+ul#toc_instructions > li {
+  font-size: 1.2em;
+  box-sizing: border-box;
+  padding: .3em;
+  display: inline-block;
+  color: white;
   background-color: grey;
-  padding: 2em;
 }
-.subsect{
-  float: right;
-  display: inline;
-}*/
-
 #toc {
   padding: 25px;
   font-family: 'Josefin Slab', serif;
@@ -449,5 +447,11 @@ section.part{
   margin-bottom: 1em;
   display: inline-block;
 
+}
+
+div.wiki.natural{
+  margin-top: 5vh;
+  font-size: 1.1em;
+  line-height: 1.2em;
 }
 

@@ -72,7 +72,6 @@ app.controller('TocController' , function ($scope , findlayFactory, tocFactory ,
 		}
 
 		$scope.loadControls = function(){  //Load in UI
-			
 			$(document).bind('keydown', function (e) { 
 
 				var sections  = $('li.section');
