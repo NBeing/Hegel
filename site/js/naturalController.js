@@ -3,10 +3,10 @@ app.controller('NaturalController' , [ '$scope', '$sce' , 'naturalFactory','engl
 
 
     $scope.loadControls = function(){  //Load in UI
-
-        $(document).on('keydown', function (e) { 
+        console.log ("Loaded controls!");
+        $(document).on('keydown', function (event) {
              var span = $('span');
-             
+
              if(event.which == 72){
                 $('#help').toggle();
              }
@@ -17,8 +17,8 @@ app.controller('NaturalController' , [ '$scope', '$sce' , 'naturalFactory','engl
                 if($scope.state == false){
                     $('.findlay').toggle();
                     $('.ind_section').width('40%');
-                
-                    $scope.state = true; 
+
+                    $scope.state = true;
                 }
                 else{
                     console.log('fire true');

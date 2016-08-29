@@ -73,7 +73,7 @@ app.controller('TocController' , function ($scope , findlayFactory, tocFactory ,
 		}
 
 		$scope.loadControls = function(){  //Load in UI
-			$(document).bind('keydown', function (e) { 
+			$(document).bind('keydown', function (event) { 
 
 				var sections  = $('li.section');
 				if(event.which == 84){
@@ -97,7 +97,7 @@ app.controller('TocController' , function ($scope , findlayFactory, tocFactory ,
 					} else {
 						$('span.word.current-word').removeClass('current-word');
 						next.addClass('current-word');
-						$('#sectiontext').scrollTo(next);							
+						  $('#sectiontext').scrollTo(next);
 					}
 				}
 				if(event.which == 49){
