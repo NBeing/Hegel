@@ -2,106 +2,106 @@
 <span class="helpblurb"> Press 'h' for help</span>
 <span class="todoblurb"> Press 't' for To Do</span>
 
-<div ng-model="ind" class = "ind_section">
+<div ng-model="ind" class="ind_section">
   <p>
     <span ng-repeat="item in ind track by $index">{{item}} </span>
   </p>
 
-<div style="clear:left;" ng-bind-html="wword" class="wiki natural"></div>
+  <div style="clear:left;" ng-bind-html="wword" class="wiki natural"></div>
 
 </div>
-<div class = "findlay" ng-model="find">{{find}}</div>
+<div class="findlay" ng-model="find">{{find}}</div>
 
-<div ng-model="wordy" class = "wordies">
+<div ng-model="wordy" class="wordies">
   <div ng-repeat="word in wordy.info track by $index">
-    <ul><span style = "font-variant: small-caps; font-size: 1.2em;">Sense: {{word.lemma}} </span>
+    <ul><span style="font-variant: small-caps; font-size: 1.2em;">Sense: {{word.lemma}} </span>
       <li>Definition: {{word.def}} </li>
       <li>Glossary: {{word.gloss}} </li>
       <li> POS: {{word.pos}} </li>
-      </ul> 
+    </ul>
   </div>
 </div>
 
-<div id = 'help' >
-<p>Hello, (James or Eric),
+<div id='help'>
+  <p>Hello, (James or Eric),
 
-Here's a demo. It's super buggy, but I'm working at it. 
+    Here's a demo. It's super buggy, but I'm working at it.
 
-<ul> In order to use this program: 
+  <ul> In order to use this program:
 
-<li> Press 'f' to get the Findlay Notes for this section </li>
-<li> Press 'e' to move to the next section </li>
-<li>Press 'q' to move to the previous section </li>
+    <li> Press 'f' to get the Findlay Notes for this section </li>
+    <li> Press 'e' to move to the next section </li>
+    <li>Press 'q' to move to the previous section </li>
 
-<li>Press 'right arrow' to move to the next word.</li>
-<li>Press 'left arrow' ... </li>
+    <li>Press 'right arrow' to move to the next word.</li>
+    <li>Press 'left arrow' ... </li>
 
-<li>Press 'w' to lookup the summary of the term on wikipedia.</li>
-<li>Press 'a' to lookup some of the entries for the word on the Wordnet Database</li>
-<li>Press 'x' to clear the selected word.</li>
+    <li>Press 'w' to lookup the summary of the term on wikipedia.</li>
+    <li>Press 'a' to lookup some of the entries for the word on the Wordnet Database</li>
+    <li>Press 'x' to clear the selected word.</li>
 
-<li>If you get a bug, press 'x' and then 'e' or 'q' to move to another section.</li>
-</ul>
-</p>
+    <li>If you get a bug, press 'x' and then 'e' or 'q' to move to another section.</li>
+  </ul>
+  </p>
 </div>
 
 <div id="todo">
   <ul>
     <ol> SCRAPING
-    <li> Pull out chapter headings</li>
-    <li> Make sure periods are retained </li>
-    <li> Make it so that you don't pull only the text but the HTML document structure as well?</li>
-    <li> After you do this you will have to find a way of looking up only non
-      <br>
-      punctuation and then put these back into the document in the correct order</li>
+      <li> Pull out chapter headings</li>
+      <li> Make sure periods are retained </li>
+      <li> Make it so that you don't pull only the text but the HTML document structure as well?</li>
+      <li> After you do this you will have to find a way of looking up only non
+        <br>
+        punctuation and then put these back into the document in the correct order</li>
 
-    <li> Before Scraping: remove duplicate links </li>
-    <li> Scrape out footnotes somehow , add to data structure </li>
-    </ol>
-    
-    <ol> DATA STRUCTURE 
-    <li> Reorganize data once we have chapters</li>
-    <li> Footnotes </li>
+      <li> Before Scraping: remove duplicate links </li>
+      <li> Scrape out footnotes somehow , add to data structure </li>
     </ol>
 
-    <ol> DATABASE 
-     <li> Add in Findlay </li>
-     <li> Add in German </li>
-     <li> New schema for above , 
-      <br> new Schema for chapter ... for Book</li>
-     </ol>
+    <ol> DATA STRUCTURE
+      <li> Reorganize data once we have chapters</li>
+      <li> Footnotes </li>
+    </ol>
+
+    <ol> DATABASE
+      <li> Add in Findlay </li>
+      <li> Add in German </li>
+      <li> New schema for above ,
+        <br> new Schema for chapter ... for Book</li>
+    </ol>
 
     <ol> UI / User Input
-     <li> Make it so you don't have to press the left and right arrows too much</li>
-     <li> Figure out how to skip punctuation (once its added)</li>
-     <li> Add 'focus' for places other than the section textbox</li>
-     <li> Make it so that the definitions from WN feel like a slideshow <br>
-          Make hotkeys for scrolling through these </li>
+      <li> Make it so you don't have to press the left and right arrows too much</li>
+      <li> Figure out how to skip punctuation (once its added)</li>
+      <li> Add 'focus' for places other than the section textbox</li>
+      <li> Make it so that the definitions from WN feel like a slideshow <br>
+        Make hotkeys for scrolling through these </li>
       <li> Make a hotkey for
       <li> In a long time: let the user decide their own hotkeys </li>
     </ol>
 
-    <ol> WIKIPEDIA 
-    <li> I want to control the wiki like this:
-      <ul>
-        <li>  First you press 'w' to load the wikipedia document</li>
-        <li>  Then you press 'W' to switch focus </li>
-        <li>  Once the frame is in focus, 
-        <br> press right / left to cycle through links </li>
-        <li> When the user hits enter, lookup that wiki page instead </li>
-      </ul>
-    </li>
+    <ol> WIKIPEDIA
+      <li> I want to control the wiki like this:
+        <ul>
+          <li> First you press 'w' to load the wikipedia document</li>
+          <li> Then you press 'W' to switch focus </li>
+          <li> Once the frame is in focus,
+            <br> press right / left to cycle through links </li>
+          <li> When the user hits enter, lookup that wiki page instead </li>
+        </ul>
+      </li>
     </ol>
 
-    <ol> WordNet 
+    <ol> WordNet
       <li> Were going to have to have a way of saving more relevant items to the database </li>
     </ol>
     <h2> Future </h2>
     <ol> Hegel / Philosophy Terms (To Come)
       <li> Look for a dictionary of Hegel/ Philosophy terminology</li>
       <li> Stanford Encyclopedia? </li>
-      </ol>
-      <ol> Glossary (automatic Glossary?) </ol>
+    </ol>
+    <ol> Glossary (automatic Glossary?) </ol>
     <ol>
   </ul>
 </div>
