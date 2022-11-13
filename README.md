@@ -62,3 +62,6 @@ Note: right now there is a bug where sections do not load above ~190. These are 
 Thanks for checking out my project. I am genuinely interested in exploring the ways in which web technologies
 will change acaedemic reading and research habits .
 
+## How to install and run
+$ npm install 
+$ node app.js
