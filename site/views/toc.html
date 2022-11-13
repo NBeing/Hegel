@@ -1,60 +1,64 @@
- <ul id="toc_instructions">
- <li> Instructions: Press T to toggle TOC</li>
- <li> Right/Left to navigate</li>
-<li> Press enter to go to section </li>
-<li> 'v' to toggle Findlay's Commentary</li>
-<li> 1/2 to scroll </li>
- </ul>
- <div id="back">
- <div ng-model="toc.data" id="toc">
- 	<section class = "part" ng-repeat="item in toc.data">
- 		<section class = "first-chapter">
- 			<h1 class='title'> {{item.title}}</h1>
- 			<ul class = "sections">
- 				<li class = "section" ng-repeat="sections in item.subsections">{{sections}}</li>
- 			</ul>
+<ul id="toc_instructions">
+	<li> Instructions: Press T to toggle TOC</li>
+	<li> Right/Left to navigate</li>
+	<li> Press enter to go to section </li>
+	<li> 'v' to toggle Findlay's Commentary</li>
+	<li> 1/2 to scroll </li>
+</ul>
+<div id="back">
+	<div ng-model="toc.data" id="toc">
+		<section class="part" ng-repeat="item in toc.data">
+			<section class="first-chapter">
+				<h1 class='title'> {{item.title}}</h1>
+				<ul class="sections">
+					<li class="section" ng-repeat="sections in item.subsections">{{sections}}</li>
+				</ul>
 
- 			<section class = "sub-chapter" ng-repeat = "subchapter in item.subchapters">
- 				<h2> {{subchapter.title}} </h2>
- 				<ul class="sections">
- 					<li class = "section" ng-repeat = "subsections in subchapter.subsections">{{subsections}}</li>
- 				</ul>
+				<section class="sub-chapter" ng-repeat="subchapter in item.subchapters">
+					<h2> {{subchapter.title}} </h2>
+					<ul class="sections">
+						<li class="section" ng-repeat="subsections in subchapter.subsections">{{subsections}}</li>
+					</ul>
 
- 				<section class="sub-sub-chapter" ng-repeat="subsubchapter in subchapter.subchapters">
- 					<h3> {{subsubchapter.title}}</h3>
- 					<ul class="sections">
- 						<li class = "section" ng-repeat="subsubsections in subsubchapter.subsections">{{subsubsections}}</li>
- 					</ul>
+					<section class="sub-sub-chapter" ng-repeat="subsubchapter in subchapter.subchapters">
+						<h3> {{subsubchapter.title}}</h3>
+						<ul class="sections">
+							<li class="section" ng-repeat="subsubsections in subsubchapter.subsections">
+								{{subsubsections}}</li>
+						</ul>
 
- 					<section class = "sub-sub-sub-chapter" ng-repeat="subsubsubchapter in subsubchapter.subchapters">
- 						<h4>{{subsubsubchapter.title}}</h4>
- 						<ul class = "sections" >
- 							<li class="section" ng-repeat="subsubsubsections in subsubsubchapter.subsections">{{subsubsubsections}}</li>
- 						</ul>
+						<section class="sub-sub-sub-chapter" ng-repeat="subsubsubchapter in subsubchapter.subchapters">
+							<h4>{{subsubsubchapter.title}}</h4>
+							<ul class="sections">
+								<li class="section" ng-repeat="subsubsubsections in subsubsubchapter.subsections">
+									{{subsubsubsections}}</li>
+							</ul>
 
- 						<!-- <section class = "sub-sub-sub-sub-chapter" ng-repeat="subsubsubsubchapter in subsubsubchapter.subchapters">
+							<!-- <section class = "sub-sub-sub-sub-chapter" ng-repeat="subsubsubsubchapter in subsubsubchapter.subchapters">
  							<h4> {{subsubsubsubchapter.title}}</h4>
  						</section> -->
- 					</section>
+						</section>
 
- 				</section>
+					</section>
 
- 			</section>
+				</section>
 
- 		</section>
+			</section>
 
- 	</section>
- </div>
+		</section>
+	</div>
 </div>
 
-<div id = "text">
-<div id="sectiontext" ng-model="sectiontext"> 
+<div id="text">
+	<div id="sectiontext" ng-model="sectiontext">
 
-	<li ng-repeat="para in sectiontext"> <span class="word" ng-repeat="word in para track by $index" ng-init="sectionIndex=$index">{{word}} </span></li>
-</div>
-	<div id="findlaytext" ng-model="findlaytext" > 
-	<span id = 'findlayanalysis'> : Findlay Analysis :</span>
-	<br>
-	<span class="word" ng-repeat="words in findlaytext track by $index" >{{words}} </span></p></li>
-</div>
+		<li ng-repeat="para in sectiontext"> <span class="word" ng-repeat="word in para track by $index"
+				ng-init="sectionIndex=$index">{{word}} </span></li>
+	</div>
+	<div id="findlaytext" ng-model="findlaytext">
+		<span id='findlayanalysis'> : Findlay Analysis :</span>
+		<br>
+		<span class="word" ng-repeat="words in findlaytext track by $index">{{words}} </span></p>
+		</li>
+	</div>
 </div>

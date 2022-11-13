@@ -2,7 +2,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var TocSchema = new Schema ({
+var TocSchema = new Schema({
 	table: Array
 })
 
